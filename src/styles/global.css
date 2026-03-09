@@ -124,6 +124,47 @@ body {
   margin: 0 auto;
 }
 
+/* ── Logo Quadrant ── */
+.logo-quadrant {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-hi);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 120px;
+  height: 120px;
+}
+
+.lq-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem;
+  color: var(--text);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.lq-cell:hover {
+  opacity: 1;
+}
+
+/* Divider lines via borders */
+.lq-tl { border-right: 1px solid var(--border-hi); border-bottom: 1px solid var(--border-hi); }
+.lq-tr { border-bottom: 1px solid var(--border-hi); }
+.lq-bl { border-right: 1px solid var(--border-hi); }
+
+/* Top row (doors): accent colour — shows the "gateway" concept */
+.lq-tl { color: var(--accent); opacity: 0.85; }
+.lq-tr { color: var(--accent); opacity: 0.45; }
+
+/* Bottom row (code → cloud): text colour */
+.lq-bl { color: var(--text); opacity: 0.55; }
+.lq-br { color: var(--accent); opacity: 0.75; }
+
 .wordmark {
   font-family: var(--font-mono);
   font-size: clamp(2.5rem, 8vw, 5rem);

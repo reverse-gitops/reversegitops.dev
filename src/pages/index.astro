@@ -2,7 +2,7 @@
 import { marked } from 'marked';
 import '../styles/global.css';
 import githubCornerSvg from '../assets/github-corner.svg?raw';
-import { Megaphone, MapPin, Calendar } from 'lucide-astro';
+import { Megaphone, MapPin, Calendar, DoorOpen, DoorClosedLocked, FileBracesCorner, CloudUpload } from 'lucide-astro';
 
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 
@@ -62,6 +62,12 @@ const buildDate = new Date().toISOString().slice(0, 10);
     <div class="hero">
       <div class="hero-glow"></div>
       <div class="hero-inner">
+        <div class="logo-quadrant" aria-hidden="true">
+          <div class="lq-cell lq-tl"><DoorOpen size={32} /></div>
+          <div class="lq-cell lq-tr"><DoorClosedLocked size={32} /></div>
+          <div class="lq-cell lq-bl"><FileBracesCorner size={32} /></div>
+          <div class="lq-cell lq-br"><CloudUpload size={32} /></div>
+        </div>
         <div class="wordmark">
           <span class="w-reverse">Reverse</span><span class="w-gitops">GitOps</span>
         </div>
