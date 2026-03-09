@@ -79,16 +79,33 @@ const buildDate = new Date().toISOString().slice(0, 10);
 
     <a href={KUBECON_SCHED_URL} class="kubecon-banner" target="_blank" rel="noopener noreferrer">
       <Megaphone class="banner-icon" size={16} />
+      <span class="banner-sep">·</span>
       <span class="banner-flash">LIVE</span>
-      <span>I'm speaking at <strong>KubeCon Co-located Europe 2026</strong></span>
+      <span class="banner-sep">·</span>
+      <span><span id="speaking-verb">I'm speaking</span> at <strong>KubeCon Co-located 2026</strong></span>
       <span class="banner-sep">·</span>
       <MapPin class="banner-icon" size={14} />
       <span>Amsterdam</span>
       <span class="banner-sep">·</span>
       <Calendar class="banner-icon" size={14} />
       <span>March 23, 2026</span>
-      <span class="banner-cta">See the talk →</span>
     </a>
+
+    <script>
+      // Talk: Monday March 23, 2026 15:55–16:20 CET (UTC+1)
+      const talkStart = new Date('2026-03-23T15:55:00+01:00');
+      const talkEnd   = new Date('2026-03-23T16:20:00+01:00');
+      const now = new Date();
+      const el = document.getElementById('speaking-verb');
+      if (el) {
+        if (now >= talkStart && now < talkEnd) {
+          el.textContent = "I'm currently speaking";
+        } else if (now >= talkEnd) {
+          el.textContent = "I've spoken";
+        }
+        // before the talk: default "I'm speaking" stays
+      }
+    </script>
 
     <main id="manifesto">
       <article class="manifesto" set:html={content} />
