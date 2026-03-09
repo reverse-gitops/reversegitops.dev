@@ -1,5 +1,6 @@
 ---
 import { marked } from 'marked';
+import '../styles/global.css';
 
 const MANIFESTO_URL =
   'https://raw.githubusercontent.com/reversegitops/manifesto/main/README.md';
@@ -10,10 +11,22 @@ if (!res.ok) {
 }
 const raw = await res.text();
 
-// Strip the H1 title — we render it ourselves in the header
+// Strip the H1 title — rendered in the hero
 const body = raw.replace(/^#[^#].*\n/, '').trimStart();
 
-const content = marked.parse(body);
+let content = marked.parse(body) as string;
+
+// Promote the closing statement to a pull-quote block
+content = content.replace(
+  /<p>The API comes first\. Git remembers\.<\/p>\s*<p>That is Reverse GitOps\.<\/p>/,
+  `<div class="pull-quote">
+    <p class="pull-main">The API comes first.<br>Git remembers.</p>
+    <p class="pull-sub">That is Reverse GitOps.</p>
+  </div>`
+);
+
+// Style the opening hook paragraph
+content = content.replace(/<p>(GitOps gave us)/, '<p class="lead">$1');
 
 const buildDate = new Date().toISOString().slice(0, 10);
 ---
@@ -31,21 +44,23 @@ const buildDate = new Date().toISOString().slice(0, 10);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
-    <header>
-      <div class="header-inner">
+    <div class="hero">
+      <div class="hero-glow"></div>
+      <div class="hero-inner">
         <div class="wordmark">
-          <span class="wordmark-reverse">Reverse</span><span class="wordmark-gitops">GitOps</span>
+          <span class="w-reverse">Reverse</span><span class="w-gitops">GitOps</span>
         </div>
-        <p class="tagline">The API comes first. Git remembers.</p>
+        <p class="hero-tagline">API-first. Git-recorded. GitOps-compatible.</p>
+        <a href="#manifesto" class="hero-cta">Read the manifesto ↓</a>
       </div>
-    </header>
+    </div>
 
-    <main>
+    <main id="manifesto">
       <article class="manifesto" set:html={content} />
     </main>
 
@@ -59,206 +74,5 @@ const buildDate = new Date().toISOString().slice(0, 10);
       </p>
     </footer>
 
-    <style is:global>
-      *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      :root {
-        --bg: #0d1117;
-        --surface: #161b22;
-        --border: #30363d;
-        --text: #e6edf3;
-        --muted: #8b949e;
-        --accent: #58a6ff;
-        --accent-dim: #1f3a5f;
-        --green: #3fb950;
-        --font-sans: 'Inter', system-ui, sans-serif;
-        --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-        --max-w: 740px;
-      }
-
-      html {
-        font-size: 16px;
-        scroll-behavior: smooth;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--font-sans);
-        line-height: 1.7;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-
-      /* ── Header ── */
-      header {
-        border-bottom: 1px solid var(--border);
-        padding: 3rem 1.5rem 2.5rem;
-      }
-
-      .header-inner {
-        max-width: var(--max-w);
-        margin: 0 auto;
-      }
-
-      .wordmark {
-        font-family: var(--font-mono);
-        font-size: clamp(2rem, 6vw, 3.25rem);
-        font-weight: 500;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        margin-bottom: 1rem;
-      }
-
-      .wordmark-reverse {
-        color: var(--muted);
-      }
-
-      .wordmark-gitops {
-        color: var(--accent);
-      }
-
-      .tagline {
-        font-size: 1.1rem;
-        color: var(--muted);
-        font-style: italic;
-      }
-
-      /* ── Main ── */
-      main {
-        flex: 1;
-        padding: 3rem 1.5rem;
-      }
-
-      .manifesto {
-        max-width: var(--max-w);
-        margin: 0 auto;
-      }
-
-      /* Markdown content styles */
-      .manifesto h2 {
-        font-size: 1.35rem;
-        font-weight: 600;
-        color: var(--text);
-        margin-top: 3rem;
-        margin-bottom: 0.75rem;
-        padding-bottom: 0.4rem;
-        border-bottom: 1px solid var(--border);
-        letter-spacing: -0.01em;
-      }
-
-      .manifesto h2:first-child {
-        margin-top: 0;
-      }
-
-      .manifesto p {
-        color: #c9d1d9;
-        margin-bottom: 1rem;
-      }
-
-      .manifesto hr {
-        border: none;
-        border-top: 1px solid var(--border);
-        margin: 2.5rem 0;
-      }
-
-      .manifesto strong {
-        color: var(--text);
-        font-weight: 600;
-      }
-
-      .manifesto em {
-        color: var(--muted);
-      }
-
-      .manifesto a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      .manifesto a:hover {
-        text-decoration: underline;
-      }
-
-      /* Table */
-      .manifesto table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1.5rem 0;
-        font-size: 0.9rem;
-      }
-
-      .manifesto th {
-        background: var(--surface);
-        color: var(--text);
-        font-weight: 600;
-        text-align: left;
-        padding: 0.6rem 1rem;
-        border: 1px solid var(--border);
-      }
-
-      .manifesto td {
-        padding: 0.6rem 1rem;
-        border: 1px solid var(--border);
-        color: #c9d1d9;
-        vertical-align: top;
-      }
-
-      .manifesto tr:nth-child(even) td {
-        background: #0f1318;
-      }
-
-      /* Blockquote / callout-style principle blocks */
-      .manifesto blockquote {
-        border-left: 3px solid var(--accent);
-        padding: 0.75rem 1.25rem;
-        margin: 1.5rem 0;
-        background: var(--accent-dim);
-        border-radius: 0 6px 6px 0;
-      }
-
-      .manifesto code {
-        font-family: var(--font-mono);
-        font-size: 0.875em;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 4px;
-        padding: 0.1em 0.4em;
-      }
-
-      /* ── Footer ── */
-      footer {
-        border-top: 1px solid var(--border);
-        padding: 1.5rem;
-        text-align: center;
-        color: var(--muted);
-        font-size: 0.85rem;
-      }
-
-      footer a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      footer a:hover {
-        text-decoration: underline;
-      }
-
-      @media (max-width: 600px) {
-        .manifesto table {
-          font-size: 0.8rem;
-        }
-
-        .manifesto th,
-        .manifesto td {
-          padding: 0.5rem 0.6rem;
-        }
-      }
-    </style>
   </body>
 </html>
