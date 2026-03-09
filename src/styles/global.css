@@ -1,3 +1,66 @@
+/* ── KubeCon Banner ── */
+.kubecon-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  background: linear-gradient(90deg, #0d1b2a 0%, #0a1628 50%, #0d1b2a 100%);
+  border-top: 1px solid rgba(68, 147, 248, 0.3);
+  border-bottom: 1px solid rgba(68, 147, 248, 0.3);
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: var(--font-sans);
+  padding: 0.6rem 1.5rem;
+  text-decoration: none;
+  transition: background 0.2s;
+  position: relative;
+  z-index: 50;
+}
+
+.kubecon-banner:hover {
+  background: linear-gradient(90deg, #111f30 0%, #0e1e32 50%, #111f30 100%);
+}
+
+.kubecon-banner strong {
+  color: var(--accent);
+}
+
+.banner-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.banner-sep {
+  color: var(--border-hi);
+}
+
+.banner-flash {
+  display: inline-flex;
+  align-items: center;
+  background: #cf2020;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  animation: flash-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes flash-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.banner-cta {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

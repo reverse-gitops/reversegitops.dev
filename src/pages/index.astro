@@ -2,6 +2,9 @@
 import { marked } from 'marked';
 import '../styles/global.css';
 import githubCornerSvg from '../assets/github-corner.svg?raw';
+import { Megaphone, MapPin, Calendar } from 'lucide-astro';
+
+const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 
 const MANIFESTO_URL =
   'https://raw.githubusercontent.com/reverse-gitops/manifesto/main/README.md';
@@ -73,6 +76,19 @@ const buildDate = new Date().toISOString().slice(0, 10);
         </div>
       </div>
     </div>
+
+    <a href={KUBECON_SCHED_URL} class="kubecon-banner" target="_blank" rel="noopener noreferrer">
+      <Megaphone class="banner-icon" size={16} />
+      <span class="banner-flash">LIVE</span>
+      <span>I'm speaking at <strong>KubeCon Co-located Europe 2026</strong></span>
+      <span class="banner-sep">·</span>
+      <MapPin class="banner-icon" size={14} />
+      <span>Amsterdam</span>
+      <span class="banner-sep">·</span>
+      <Calendar class="banner-icon" size={14} />
+      <span>March 23, 2026</span>
+      <span class="banner-cta">See the talk →</span>
+    </a>
 
     <main id="manifesto">
       <article class="manifesto" set:html={content} />
