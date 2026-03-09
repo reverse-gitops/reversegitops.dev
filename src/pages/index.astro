@@ -2,7 +2,7 @@
 import { marked } from 'marked';
 import '../styles/global.css';
 import githubCornerSvg from '../assets/github-corner.svg?raw';
-import { Megaphone, MapPin, Calendar, DoorOpen, DoorClosedLocked, FileBracesCorner, CloudUpload } from 'lucide-astro';
+import { Megaphone, MapPin, Calendar } from 'lucide-astro';
 
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 
@@ -62,12 +62,21 @@ const buildDate = new Date().toISOString().slice(0, 10);
     <div class="hero">
       <div class="hero-glow"></div>
       <div class="hero-inner">
-        <div class="logo-quadrant" aria-hidden="true">
-          <div class="lq-cell lq-tl"><DoorOpen size={32} /></div>
-          <div class="lq-cell lq-tr"><DoorClosedLocked size={32} /></div>
-          <div class="lq-cell lq-bl"><FileBracesCorner size={32} /></div>
-          <div class="lq-cell lq-br"><CloudUpload size={32} /></div>
-        </div>
+        <svg class="logo-combine" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <defs>
+            <linearGradient id="combine-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stop-color="#60a5fa" />
+              <stop offset="50%"  stop-color="#4493f8" />
+              <stop offset="100%" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+          <path d="M17 9 L14 6"                            stroke="url(#combine-grad)" />
+          <path d="M17 3 L14 6 H19 A2 2 0 0 1 21 8 V10"  stroke="url(#combine-grad)" />
+          <path d="m7 15 3 3"                              stroke="url(#combine-grad)" />
+          <path d="m7 21 3-3H5a2 2 0 0 1-2-2v-2"          stroke="url(#combine-grad)" />
+          <rect x="14" y="14" width="7" height="7" rx="1" stroke="url(#combine-grad)" />
+          <rect x="3"  y="3"  width="7" height="7" rx="1" stroke="#7d8590" />
+        </svg>
         <div class="wordmark">
           <span class="w-reverse">Reverse</span><span class="w-gitops">GitOps</span>
         </div>

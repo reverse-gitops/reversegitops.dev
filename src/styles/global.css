@@ -124,46 +124,14 @@ body {
   margin: 0 auto;
 }
 
-/* ── Logo Quadrant ── */
-.logo-quadrant {
-  display: inline-grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 0;
-  margin-bottom: 2rem;
-  border: 1px solid var(--border-hi);
-  border-radius: 12px;
-  overflow: hidden;
-  width: 120px;
-  height: 120px;
+/* ── Logo: Combine icon ── */
+.logo-combine {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 2rem;
+  filter: drop-shadow(0 0 18px rgba(68, 147, 248, 0.35));
 }
-
-.lq-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.85rem;
-  color: var(--text);
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.lq-cell:hover {
-  opacity: 1;
-}
-
-/* Divider lines via borders */
-.lq-tl { border-right: 1px solid var(--border-hi); border-bottom: 1px solid var(--border-hi); }
-.lq-tr { border-bottom: 1px solid var(--border-hi); }
-.lq-bl { border-right: 1px solid var(--border-hi); }
-
-/* Top row (doors): accent colour — shows the "gateway" concept */
-.lq-tl { color: var(--accent); opacity: 0.85; }
-.lq-tr { color: var(--accent); opacity: 0.45; }
-
-/* Bottom row (code → cloud): text colour */
-.lq-bl { color: var(--text); opacity: 0.55; }
-.lq-br { color: var(--accent); opacity: 0.75; }
 
 .wordmark {
   font-family: var(--font-mono);
@@ -175,7 +143,12 @@ body {
 }
 
 .w-reverse { color: var(--muted); }
-.w-gitops  { color: var(--accent); }
+.w-gitops  {
+  background: linear-gradient(135deg, #60a5fa 0%, #4493f8 50%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 .hero-tagline {
   font-size: clamp(0.95rem, 2.5vw, 1.15rem);
