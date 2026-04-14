@@ -3,6 +3,7 @@
 The public website for [reversegitops.dev](https://reversegitops.dev).
 
 Built with [Astro](https://astro.build). Content is pulled from [reverse-gitops/manifesto](https://github.com/reverse-gitops/manifesto) at build time and deployed to GitHub Pages.
+This site uses PostHog for basic analytics. PostHog is hosted in the EU and configured without cookies.
 
 ## Attributions
 

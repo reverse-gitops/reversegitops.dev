@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import githubCornerSvg from '../assets/github-corner.svg?raw';
+import PostHog from '../components/PostHog.astro';
 
 interface Props {
   title?: string;
@@ -66,5 +67,6 @@ const currentPath = Astro.url.pathname;
         >↺ Rebuild site</a>
       </p>
     </footer>
+    <PostHog />
   </body>
 </html>

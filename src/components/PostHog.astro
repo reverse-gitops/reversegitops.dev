@@ -1,0 +1,48 @@
+---
+const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY || 'phc_BfarNEi6N2MDwrXyfvHahrwfZSAizHdBVGgKe7QiCowh';
+const rawHost = import.meta.env.PUBLIC_POSTHOG_HOST || 'stuff.reversegitops.dev';
+const normalizedHost = /^https?:\/\//.test(rawHost) ? rawHost : `https://${rawHost}`;
+const shouldLoad = Boolean(posthogKey);
+---
+
+{
+  shouldLoad && (
+    <>
+      <div id="posthog-config" data-key={posthogKey} data-host={normalizedHost} hidden></div>
+      <script>
+        const configEl = document.getElementById('posthog-config');
+        const posthogKey = configEl?.getAttribute('data-key');
+        const normalizedHost = configEl?.getAttribute('data-host');
+
+        if (!posthogKey || !normalizedHost) {
+          throw new Error('Missing PostHog configuration');
+        }
+
+        configEl.remove();
+
+        const loadPostHog = async () => {
+          const { default: posthog } = await import('posthog-js');
+
+          posthog.init(posthogKey, {
+            api_host: normalizedHost,
+            capture_pageview: true,
+            capture_pageleave: true,
+            persistence: 'localStorage',
+            person_profiles: 'identified_only',
+            respect_dnt: true,
+          });
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            void loadPostHog();
+          });
+        } else {
+          window.addEventListener('load', () => {
+            void loadPostHog();
+          }, { once: true });
+        }
+      </script>
+    </>
+  )
+}
