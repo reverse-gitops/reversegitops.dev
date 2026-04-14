@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { MapPin, Globe, Calendar } from 'lucide-astro';
+
+const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
+const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
+const YT_EMBED = 'https://www.youtube.com/embed/X3sUAsTPbDM';
+const YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
+---
+
+<Layout title="Talks" description="Public talks on Reverse GitOps — the API-first, Git-recorded platform operating model.">
+  <main class="page-main">
+    <div class="page-content">
+      <h1 class="page-title">Talks</h1>
+
+      <section>
+        <h2 class="section-label">Upcoming</h2>
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">CozySummit Virtual 2026</span>
+            <span class="talk-sep">·</span>
+            <Globe size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Virtual · May 26, 2026 · 17:50–18:20 UTC</span>
+          </div>
+          <h3 class="talk-title">What If Every Cozystack Change Became a Commit?</h3>
+          <p class="talk-desc">
+            Cozystack exposes platform services as Kubernetes API resources — Postgres, Redis,
+            Bucket, Kubernetes. Users interact in the usual ways: kubectl, the Cozystack
+            dashboard, or AI agents via MCP. But who is making all these changes, and why did
+            they do it? Git seems far away. But it doesn't have to be.
+          </p>
+          <p class="talk-desc">
+            What if every platform change automatically appeared as clean YAML in Git? Fully
+            automated — a silent layer that turns API activity into a durable, readable history
+            of infrastructure intent. Instead of digging through logs or dashboards, teams get
+            versioned history they can inspect, diff, and share. The platform continuously writes
+            its intent back to Git. Git stops being the interface — and starts being the memory.
+          </p>
+          <div class="talk-links">
+            <a href={COZYSUMMIT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Register free →</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-label">Past</h2>
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">KubeCon + CloudNativeCon Europe 2026 · Platform Engineering Day</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Amsterdam · March 23, 2026</span>
+          </div>
+          <h3 class="talk-title">The GitOps Paradox: Why Your Devs Need an API You Don't Want To Build</h3>
+          <p class="talk-desc">
+            This session argues that GitOps is valuable, but Git does not always need to be the
+            human-facing front door for every change. Platform teams often end up rebuilding APIs
+            and UIs around workflows that the Kubernetes API already models well. Reverse GitOps
+            explores a different approach: use a small, typed Kubernetes control plane for user
+            intent, then write that intent back into Git so review, promotion, and auditability
+            stay intact.
+          </p>
+          <p class="talk-desc">
+            The talk includes two live demos: a simple application writing user intent into the
+            Kubernetes API and syncing it back to Git; and a higher-level platform resource
+            flowing from API input to Git to preview and production deployment.
+          </p>
+          <div class="talk-video-wrap">
+            <iframe
+              src={YT_EMBED}
+              title="The GitOps Paradox — KubeCon Platform Engineering Day 2026"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="talk-links">
+            <a href={YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
+            <a href={KUBECON_SCHED_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Session page</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,194 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="FAQ" description="Frequently asked questions about Reverse GitOps, the API-first, Git-recorded platform operating model.">
+  <main class="page-main">
+    <div class="page-content">
+      <h1 class="page-title">FAQ</h1>
+
+      <dl class="faq-list">
+
+        <div class="faq-item" id="what-is-reverse-gitops">
+          <dt class="faq-q">What is Reverse GitOps?<a href="#what-is-reverse-gitops" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Reverse GitOps is an API-first operating model. Instead of asking users to push YAML
+              to Git directly, they express intent through a typed platform API: Kubernetes custom
+              resources. A controller then writes that validated intent back into Git as a commit or
+              pull request. The standard GitOps delivery pipeline (review, promotion, auditability)
+              stays fully intact downstream.
+            </p>
+            <p>
+              API-first does not mean API-only. Teams can still make changes in Git when that is the
+              right interface. The point is that Git no longer has to be the only user-facing write
+              path.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="why-not-git-directly">
+          <dt class="faq-q">Why not just use Git directly?<a href="#why-not-git-directly" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Git is excellent for review, history, promotion, and distribution. It is often much
+              less good as the primary interface for every human or tool that wants to make a small
+              change. Platform teams frequently end up building an API or UI on top of Git workflows
+              anyway.
+            </p>
+            <p>
+              Reverse GitOps makes that API a first-class part of the design. Users express intent
+              through a typed Kubernetes API, and a controller writes the resulting change back to
+              Git for review and delivery. Git remains available for direct changes too; Reverse
+              GitOps just stops treating Git as the only acceptable interface for writing intent.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="replace-gitops">
+          <dt class="faq-q">Is Reverse GitOps trying to replace GitOps?<a href="#replace-gitops" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              No. It changes the write path, not the delivery model. Git can still be where changes
+              are reviewed, promoted, audited, and distributed to target environments through tools
+              like Flux or Argo CD.
+            </p>
+            <p>
+              In practice, that also means teams can still make changes directly in Git. Reverse
+              GitOps is API-first, not API-only.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="source-of-truth">
+          <dt class="faq-q">Is Git still the source of truth?<a href="#source-of-truth" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              It depends on which question you are asking.
+            </p>
+            <p>
+              For user intent, the typed API is the preferred front door. For reviewable and
+              promotable desired state, Git is still the durable system of record. Reverse GitOps
+              does not treat the workload cluster as the place where uncontrolled edits happen. It
+              treats the API as a first-class input surface and Git as the reviewed record that
+              downstream delivery systems consume, whether a change started from the API or directly
+              in Git.
+            </p>
+            <p>
+              If Git and the API drift, the implementation needs to make that visible and
+              predictable rather than silently allowing both to evolve independently.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="production-cluster-access">
+          <dt class="faq-q">Does this mean users get access to the production cluster?<a href="#production-cluster-access" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              No. The pattern is about putting a small, focused control plane in front of Git. That
+              control plane does not need to be the production workload cluster. In practice,
+              separating them is often part of the point.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="kubernetes-primitives">
+          <dt class="faq-q">What Kubernetes primitives does this require?<a href="#kubernetes-primitives" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Three things: a CRD that models user intent (for example an
+              <code>Application</code> or <code>Environment</code> resource), a controller that
+              watches those CRDs and opens pull requests or commits to a Git repository, and a
+              GitOps operator downstream (Argo CD, Flux) that deploys from that repository.
+            </p>
+            <p>
+              The <a href="/implementations">gitops-reverser</a> project provides an open-source
+              controller you can start from.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="when-to-use">
+          <dt class="faq-q">When should I use this pattern?<a href="#when-to-use" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              When you want a typed, validated, RBAC-enforced API as the interface for platform
+              users, but still need Git review, auditability, and promotion pipelines. It is a
+              good fit for platform teams who would otherwise build a custom API or UI on top of
+              their GitOps workflow. Reverse GitOps lets the Kubernetes API server do that work
+              instead.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="bullshit">
+          <dt class="faq-q">Isn't this bullshit?<a href="#bullshit" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Fair question. It would absolutely be bullshit to claim that Reverse GitOps can
+              take an existing GitOps setup built around Helm releases, elaborate Kustomize
+              overlays, and layers of environment-specific patches, and somehow reverse that back
+              into clean API intent. That is not what this is.
+            </p>
+            <p>
+              The pattern works when you have a typed, flat API resource that represents user
+              intent cleanly. A Crossplane <code>PostgreSQLInstance</code> claim or a KRO
+              <code>ResourceGroup</code> is a good fit: the user writes one clean resource, the
+              platform handles the complexity underneath. A tangle of Helm values files with
+              conditional templating is not.
+            </p>
+            <p>
+              Reverse GitOps is a model for designing new platform APIs, not a tool for
+              reverse-engineering existing ones.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="day-2-debugging">
+          <dt class="faq-q">How do I debug this on day 2?<a href="#day-2-debugging" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              You need to be able to trace the full path clearly: the intent submitted through the
+              API, the Git commit or pull request that captured it, the promotion path between
+              environments, and the resulting resources deployed by the GitOps system.
+            </p>
+            <p>
+              If that trace is not easy to follow, the implementation is not good enough yet.
+              Updates, deletions, and drift handling still require explicit ownership decisions, but
+              the debugging path should be obvious long before those edge cases show up.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="who-is-behind-this">
+          <dt class="faq-q">Who is behind this?<a href="#who-is-behind-this" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Right now: <a href="https://koudijs.dev" target="_blank" rel="noopener noreferrer">Simon Koudijs</a>,
+              consultant, trainer, and founder of <a href="https://configbutler.ai" target="_blank" rel="noopener noreferrer">ConfigButler</a>.
+            </p>
+            <p>
+              But the concept is intentionally bigger than one company. The manifesto is open
+              source, the implementations are open source, and the hope is that others will build
+              on this, challenge it, and create their own implementations. If Reverse GitOps is a
+              useful idea, it should not belong to anyone.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="open-source">
+          <dt class="faq-q">Is there an open-source implementation?<a href="#open-source" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Yes. See the <a href="/implementations">Implementations</a> page for known
+              open-source projects. The reference implementation is
+              <a href="https://github.com/ConfigButler/gitops-reverser" target="_blank" rel="noopener noreferrer">gitops-reverser</a>
+              by ConfigButler.
+            </p>
+          </dd>
+        </div>
+
+      </dl>
+    </div>
+  </main>
+</Layout>

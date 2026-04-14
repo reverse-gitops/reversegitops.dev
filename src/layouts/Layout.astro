@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import githubCornerSvg from '../assets/github-corner.svg?raw';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Reverse GitOps',
+  description = 'An API-first operating model where users and agents make validated changes through a typed platform API, while a controller writes those changes back into Git.',
+} = Astro.props;
+
+const pageTitle = title === 'Reverse GitOps' ? title : `${title} · Reverse GitOps`;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a href="https://github.com/reverse-gitops/manifesto" class="github-corner" aria-label="Star us on GitHub" target="_blank" rel="noopener noreferrer" set:html={githubCornerSvg} />
+
+    <nav class="site-nav">
+      <a href="/" class="nav-logo" aria-label="Reverse GitOps home">
+        <span class="nav-reverse">Reverse</span><span class="nav-gitops">GitOps</span>
+      </a>
+      <div class="nav-links">
+        <a href="/talks" class:list={['nav-link', { 'nav-active': currentPath.startsWith('/talks') }]}>Talks</a>
+        <a href="/implementations" class:list={['nav-link', { 'nav-active': currentPath.startsWith('/implementations') }]}>Implementations</a>
+        <a href="/faq" class:list={['nav-link', { 'nav-active': currentPath.startsWith('/faq') }]}>FAQ</a>
+      </div>
+    </nav>
+
+    <slot />
+
+    <footer>
+      <p>
+        Powered by <a href="https://koudijs.dev" target="_blank" rel="noopener noreferrer">koudijs.dev</a>
+        {' '}and <a href="https://configbutler.ai" target="_blank" rel="noopener noreferrer">ConfigButler</a>
+      </p>
+      <p>
+        Content from <a
+          href="https://github.com/reverse-gitops/manifesto"
+          target="_blank"
+          rel="noopener noreferrer">reverse-gitops/manifesto</a>
+      </p>
+      <p>
+        <a
+          href="https://github.com/reverse-gitops/reversegitops.dev/actions/workflows/deploy.yml"
+          class="rebuild-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >↺ Rebuild site</a>
+      </p>
+    </footer>
+  </body>
+</html>
