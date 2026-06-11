@@ -1,11 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MapPin, Globe, Calendar } from 'lucide-astro';
+import { MapPin, Globe } from 'lucide-astro';
 
+const OREDEV_URL = 'https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9';
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
-const YT_EMBED = 'https://www.youtube.com/embed/X3sUAsTPbDM';
-const YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
+const COZYSUMMIT_YT_EMBED = 'https://www.youtube.com/embed/dkyjOq-I7Zs';
+const COZYSUMMIT_YT_URL = 'https://www.youtube.com/watch?v=dkyjOq-I7Zs';
+const COZYSUMMIT_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/cozystack/slides.pdf';
+const KUBECON_YT_EMBED = 'https://www.youtube.com/embed/X3sUAsTPbDM';
+const KUBECON_YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
+const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/the-gitops-paradox.pdf';
 ---
 
 <Layout title="Talks" description="Public talks on Reverse GitOps — the API-first, Git-recorded platform operating model.">
@@ -15,6 +20,57 @@ const YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
 
       <section>
         <h2 class="section-label">Upcoming</h2>
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">Øredev 2026</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Malmö · November 5, 2026 · 14:55–15:35 CET · STAMP</span>
+          </div>
+          <h3 class="talk-title">Configuration Deserves a Software Delivery Process Too</h3>
+          <p class="talk-desc">
+            Configuration is often some of the most critical logic in a system, yet many teams
+            still manage it with far less discipline than code. It lives in databases, gets edited
+            through admin screens, bypasses proper review, mixes awkwardly with secrets, and moves
+            across environments with limited testing and weak packaging boundaries.
+          </p>
+          <p class="talk-desc">
+            This talk argues that configuration should be treated as a delivery problem, not just a
+            storage problem: capture validated intent through an API, then turn it into
+            configuration that is tested, packaged, versioned, signed, and promoted through
+            environments as controlled artifacts.
+          </p>
+          <div class="talk-links">
+            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Session page →</a>
+          </div>
+        </div>
+
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">Øredev 2026</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Malmö · November 6, 2026 · 11:15–11:55 CET · TURING</span>
+          </div>
+          <h3 class="talk-title">(Ab)using the Kubernetes API as a Configuration Backend</h3>
+          <p class="talk-desc">
+            Configuration-heavy products often reinvent the same backend machinery: typed objects,
+            validation, permissions, audit trails, and some form of realtime change propagation.
+            Over time, that configuration backend starts to look a lot like a control plane.
+          </p>
+          <p class="talk-desc">
+            This talk explores the Kubernetes API as a backend for configuration-heavy software
+            products rather than as an infrastructure surface, including what the approach enables,
+            which trade-offs it introduces, and where the model starts to break down.
+          </p>
+          <div class="talk-links">
+            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Session page →</a>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-label">Past</h2>
         <div class="talk-card">
           <div class="talk-meta">
             <span class="talk-event">CozySummit Virtual 2026</span>
@@ -36,14 +92,21 @@ const YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
             versioned history they can inspect, diff, and share. The platform continuously writes
             its intent back to Git. Git stops being the interface — and starts being the memory.
           </p>
+          <div class="talk-video-wrap">
+            <iframe
+              src={COZYSUMMIT_YT_EMBED}
+              title="What If Every Cozystack Change Became a Commit? — CozySummit Virtual 2026"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
           <div class="talk-links">
-            <a href={COZYSUMMIT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Register free →</a>
+            <a href={COZYSUMMIT_YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
+            <a href={COZYSUMMIT_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
+            <a href={COZYSUMMIT_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Event page</a>
           </div>
         </div>
-      </section>
 
-      <section>
-        <h2 class="section-label">Past</h2>
         <div class="talk-card">
           <div class="talk-meta">
             <span class="talk-event">KubeCon + CloudNativeCon Europe 2026 · Platform Engineering Day</span>
@@ -67,14 +130,15 @@ const YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
           </p>
           <div class="talk-video-wrap">
             <iframe
-              src={YT_EMBED}
+              src={KUBECON_YT_EMBED}
               title="The GitOps Paradox — KubeCon Platform Engineering Day 2026"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
           </div>
           <div class="talk-links">
-            <a href={YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
+            <a href={KUBECON_YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
+            <a href={KUBECON_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
             <a href={KUBECON_SCHED_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Session page</a>
           </div>
         </div>

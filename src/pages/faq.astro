@@ -49,9 +49,9 @@ import Layout from '../layouts/Layout.astro';
           <dt class="faq-q">Is Reverse GitOps trying to replace GitOps?<a href="#replace-gitops" class="faq-anchor">#</a></dt>
           <dd class="faq-a">
             <p>
-              No. It changes the write path, not the delivery model. Git can still be where changes
-              are reviewed, promoted, audited, and distributed to target environments through tools
-              like Flux or Argo CD.
+              No. It changes where intent enters the system, not the delivery model. Git can still
+              be where changes are reviewed, promoted, audited, and distributed to target
+              environments through GitOps operators such as Flux or Argo CD.
             </p>
             <p>
               In practice, that also means teams can still make changes directly in Git. Reverse
@@ -71,12 +71,28 @@ import Layout from '../layouts/Layout.astro';
               promotable desired state, Git is still the durable system of record. Reverse GitOps
               does not treat the workload cluster as the place where uncontrolled edits happen. It
               treats the API as a first-class input surface and Git as the reviewed record that
-              downstream delivery systems consume, whether a change started from the API or directly
+              downstream GitOps operators consume, whether a change started from the API or directly
               in Git.
             </p>
             <p>
               If Git and the API drift, the implementation needs to make that visible and
               predictable rather than silently allowing both to evolve independently.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="which-cluster">
+          <dt class="faq-q">Which cluster am I actually talking to?<a href="#which-cluster" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              In the model described by this site, you are talking to a separate intent cluster. It
+              is a small control plane for expressing and validating intent, not the same thing as
+              the workload clusters where applications and infrastructure eventually run.
+            </p>
+            <p>
+              That separation is deliberate. It keeps the user-facing API stable, avoids giving
+              broad access to implementation clusters, and makes it much clearer where intent is
+              submitted, where it is recorded, and where GitOps operators take over.
             </p>
           </dd>
         </div>
@@ -104,6 +120,41 @@ import Layout from '../layouts/Layout.astro';
             <p>
               The <a href="/implementations">gitops-reverser</a> project provides an open-source
               controller you can start from.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="concrete-example">
+          <dt class="faq-q">Can you walk me through a concrete example?<a href="#concrete-example" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              A developer wants to deploy a new application. Instead of opening a pull request
+              with a handwritten YAML file, they apply an <code>Application</code> resource to
+              the intent cluster:
+            </p>
+            <pre><code>apiVersion: platform.example.com/v1
+kind: Application
+metadata:
+  name: checkout-service
+  namespace: team-payments
+spec:
+  image: registry.example.com/checkout:v1.4.2
+  replicas: 3
+  environment: production</code></pre>
+            <p>
+              The API server validates it immediately. Wrong field names, unknown environments,
+              and policy violations are all caught at write time, before anything touches Git.
+            </p>
+            <p>
+              A controller watches the resource and opens a pull request in the GitOps
+              repository with a clean manifest. A reviewer approves it. Flux or Argo CD picks it
+              up and deploys the application to the target cluster. The developer can see whether
+              their intent landed by inspecting the resource they submitted.
+            </p>
+            <p>
+              From the developer's perspective: one API call, immediate validation feedback, and
+              a normal Git review process for anything that needs it. They never had to author
+              or maintain a commit themselves.
             </p>
           </dd>
         </div>
@@ -156,6 +207,22 @@ import Layout from '../layouts/Layout.astro';
               If that trace is not easy to follow, the implementation is not good enough yet.
               Updates, deletions, and drift handling still require explicit ownership decisions, but
               the debugging path should be obvious long before those edge cases show up.
+            </p>
+          </dd>
+        </div>
+
+        <div class="faq-item" id="resource-status">
+          <dt class="faq-q">How do I know whether my intent landed?<a href="#resource-status" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Every user-facing resource should expose a way to answer: did my intent land,
+              where did it land, and is it healthy there?
+            </p>
+            <p>
+              It should not simply mirror every implementation detail from downstream systems back
+              into the user-facing API. At a minimum, it should make clear whether the resource has
+              been picked up and deployed by GitOps, and it should always provide a clue about
+              where to look next for more information.
             </p>
           </dd>
         </div>
