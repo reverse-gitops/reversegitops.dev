@@ -159,6 +159,36 @@ spec:
           </dd>
         </div>
 
+        <div class="faq-item" id="application-configuration">
+          <dt class="faq-q">Does this only apply to infrastructure, or to application configuration too?<a href="#application-configuration" class="faq-anchor">#</a></dt>
+          <dd class="faq-a">
+            <p>
+              Application configuration works just as well. Nothing in the pattern is specific to
+              infrastructure. A custom resource is a schema plus a file, and feature flags,
+              business rules, pricing tiers, and domain settings fit that shape as naturally as a
+              <code>Deployment</code> does. The Kubernetes API does not care whether the thing
+              being described is a workload or the behaviour of a product.
+            </p>
+            <p>
+              That matters because application teams keep rebuilding the same machinery for their
+              own settings: a schema, validation, permissions, an audit trail, and some way to
+              notice that a value changed. Modelling that configuration as custom resources lets
+              the API server do that work instead, so the team can offload a meaningful part of
+              the responsibility for configuring their application rather than maintaining yet
+              another admin screen backed by a bespoke database table.
+            </p>
+            <p>
+              It also opens up a question worth asking out loud: why not let customers work
+              against the Kubernetes API directly? Not the production workload cluster, but a
+              small, dedicated API that models the settings they are allowed to change. They get
+              typed validation, resource-level authorization, and immediate feedback, while every
+              accepted change still lands in Git as a reviewable, attributable commit. The people
+              changing the settings never have to see Git, and the team responsible for the
+              application still gets the history.
+            </p>
+          </dd>
+        </div>
+
         <div class="faq-item" id="when-to-use">
           <dt class="faq-q">When should I use this pattern?<a href="#when-to-use" class="faq-anchor">#</a></dt>
           <dd class="faq-a">
