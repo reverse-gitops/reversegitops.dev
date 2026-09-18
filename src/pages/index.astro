@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { readFileSync } from 'node:fs';
+import raw from '../../external/manifesto/README.md?raw';
 import { marked } from 'marked';
 import { Megaphone } from 'lucide-astro';
 
@@ -8,9 +8,9 @@ const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
 
 // external/manifesto is a submodule tracking main; the sync:manifesto script
-// moves it to the branch tip and runs from predev and prebuild.
-const MANIFESTO_PATH = new URL('../../external/manifesto/README.md', import.meta.url);
-const raw = readFileSync(MANIFESTO_PATH, 'utf8');
+// moves it to the branch tip and runs from predev and prebuild. Imported via
+// Vite ?raw so it is inlined at build time — the prerender entry is bundled
+// into dist/, so a runtime path lookup would resolve against the wrong root.
 
 // Strip the H1 title — rendered in the hero
 const body = raw.replace(/^#[^#].*\n/, '').trimStart();
