@@ -1,19 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { readFileSync } from 'node:fs';
 import { marked } from 'marked';
 import { Megaphone } from 'lucide-astro';
 
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
 
-const MANIFESTO_URL =
-  'https://raw.githubusercontent.com/reverse-gitops/manifesto/main/README.md';
-
-const res = await fetch(MANIFESTO_URL);
-if (!res.ok) {
-  throw new Error(`Failed to fetch manifesto: ${res.status} ${res.statusText}`);
-}
-const raw = await res.text();
+// external/manifesto is a submodule tracking main; the sync:manifesto script
+// moves it to the branch tip and runs from predev and prebuild.
+const MANIFESTO_PATH = new URL('../../external/manifesto/README.md', import.meta.url);
+const raw = readFileSync(MANIFESTO_PATH, 'utf8');
 
 // Strip the H1 title — rendered in the hero
 const body = raw.replace(/^#[^#].*\n/, '').trimStart();

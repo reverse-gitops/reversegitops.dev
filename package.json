@@ -3,8 +3,10 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "sync:manifesto": "git submodule update --init --remote external/manifesto",
     "render:og": "node scripts/render-og-image.mjs",
-    "prebuild": "npm run render:og",
+    "prebuild": "npm run sync:manifesto && npm run render:og",
+    "predev": "npm run sync:manifesto",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"

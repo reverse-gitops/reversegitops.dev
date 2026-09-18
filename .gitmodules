@@ -1,0 +1,5 @@
+[submodule "external/manifesto"]
+	path = external/manifesto
+	url = https://github.com/reverse-gitops/manifesto.git
+	branch = main
+	ignore = all
