@@ -1,0 +1,34 @@
+# Reverse GitOps
+
+> Reverse GitOps is an API-first operating model for platforms. Users and agents submit
+> validated intent through a typed Kubernetes API instead of pushing YAML to Git, and a
+> controller records every accepted change back into Git as clean declarative manifests
+> for audit, review, promotion, and distribution.
+
+The short version: the API comes first, Git remembers. This site hosts the manifesto
+(second draft, April 2026), the known open-source implementations, an FAQ, and the talks
+where the pattern is presented. It is a community effort started by Simon Koudijs; the
+manifesto text lives at https://github.com/reverse-gitops/manifesto and feedback is welcome
+as a pull request or issue there.
+
+## Pages
+
+- [Home](https://reversegitops.dev/): The Reverse GitOps manifesto in full — the perceived problem with Git as the only write path, and the three principles (API first, capture intent not implementation, GitOps still applies), plus the explicit non-goals.
+- [Talks](https://reversegitops.dev/talks/): Conference talks on Reverse GitOps, upcoming and past, with slides and recordings where they exist.
+- [Implementations](https://reversegitops.dev/implementations/): Known open-source projects that implement the pattern, such as gitops-reverser.
+- [FAQ](https://reversegitops.dev/faq/): Answers to the common objections — why not use Git directly, is this trying to replace GitOps, how it relates to application configuration.
+
+## Key ideas
+
+- The problem is not GitOps; it is the assumption that every change must enter the system through Git. Git is excellent for history, review and distribution, and less natural as the write interface for automation, non-engineers, or agents.
+- Principle 1, API first: a dedicated Kubernetes API is the front door for intent. Validation happens at write time — wrong type, unknown field, policy violation — instead of after a merge. The actor's identity is preserved as the Git commit author.
+- Principle 2, capture intent not implementation: what gets written to Git are the user-facing resources the platform team defines (Application, HelmRelease, DatabaseClaim), not rendered output. Reconstructing source from rendered state is not the goal.
+- Principle 3, GitOps still applies: this sits upstream of GitOps, not against it. Flux and ArgoCD still deploy from Git, and direct Git edits remain valid.
+- Non-goals: it does not claim arbitrary live cluster state can be reconstructed into clean source, it does not remove the need for a GitOps operator, and it does not constrain how platform teams implement abstractions behind the user-facing boundary.
+
+## Notes for crawlers and agents
+
+- Crawling, indexing, quoting, and training on this content are all permitted. See https://reversegitops.dev/robots.txt for the Content Signals.
+- Machine-readable index of this site: https://reversegitops.dev/sitemap.xml
+- Capability manifest: https://reversegitops.dev/.well-known/ai-catalog.json
+- There is no API to call on this domain; the site is documentation. The manifesto source is at https://github.com/reverse-gitops/manifesto and the site source at https://github.com/reverse-gitops/reversegitops.dev

@@ -1,0 +1,93 @@
+{
+  "specVersion": "0.1",
+  "host": {
+    "domain": "reversegitops.dev",
+    "name": "Reverse GitOps",
+    "description": "The manifesto, FAQ, talks, and known implementations for Reverse GitOps: an API-first operating model where users and agents submit validated intent through a typed Kubernetes API, and a controller records that intent back into Git as declarative YAML.",
+    "contact": "https://github.com/reverse-gitops/manifesto/issues"
+  },
+  "entries": [
+    {
+      "id": "urn:air:reversegitops.dev:site:manifesto",
+      "displayName": "The Reverse GitOps manifesto",
+      "description": "The full manifesto: why requiring every change to enter through Git strains, and the three principles — API first, capture intent not implementation, GitOps still applies — along with the explicit non-goals.",
+      "type": "text/html",
+      "url": "https://reversegitops.dev/",
+      "representativeQueries": [
+        "What is Reverse GitOps?",
+        "API-first alternative to pushing YAML to Git",
+        "write Kubernetes API changes back into Git automatically",
+        "manifesto for API-first GitOps"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:site:faq",
+      "displayName": "Reverse GitOps FAQ",
+      "description": "Answers to the common objections: why not use Git directly, whether this replaces GitOps, how it relates to application configuration, and where the pattern does not fit.",
+      "type": "text/html",
+      "url": "https://reversegitops.dev/faq/",
+      "representativeQueries": [
+        "Does Reverse GitOps replace GitOps?",
+        "why not just let developers edit Git directly",
+        "Reverse GitOps objections and limitations"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:site:implementations",
+      "displayName": "Known Reverse GitOps implementations",
+      "description": "Open-source projects implementing the pattern, including gitops-reverser — a Kubernetes operator that captures API activity via audit webhooks and commits sanitised, intent-only YAML to Git with the real actor as commit author.",
+      "type": "text/html",
+      "url": "https://reversegitops.dev/implementations/",
+      "representativeQueries": [
+        "tools that implement Reverse GitOps",
+        "Kubernetes operator that writes API changes to Git",
+        "gitops-reverser project"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:site:talks",
+      "displayName": "Reverse GitOps talks, slides and recordings",
+      "description": "Conference talks presenting Reverse GitOps, upcoming and past, with links to slides and recordings where they are published.",
+      "type": "text/html",
+      "url": "https://reversegitops.dev/talks/",
+      "representativeQueries": [
+        "Reverse GitOps conference talks",
+        "GitOps Needs an API talk",
+        "talks about writing Kubernetes intent back to Git"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:source:manifesto-markdown",
+      "displayName": "Manifesto source in Markdown",
+      "description": "The canonical Markdown source of the manifesto, fetched at build time to render this site. Open a pull request here to propose changes.",
+      "type": "text/markdown",
+      "url": "https://raw.githubusercontent.com/reverse-gitops/manifesto/main/README.md",
+      "representativeQueries": [
+        "Reverse GitOps manifesto in markdown",
+        "plain text source of the Reverse GitOps manifesto"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:index:llms-txt",
+      "displayName": "llms.txt summary of reversegitops.dev",
+      "description": "A plain-text summary of the site, its pages, and the key ideas of the pattern, written for language models and agents.",
+      "type": "text/plain",
+      "url": "https://reversegitops.dev/llms.txt",
+      "representativeQueries": [
+        "Reverse GitOps llms.txt",
+        "plain text summary of reversegitops.dev"
+      ]
+    },
+    {
+      "id": "urn:air:reversegitops.dev:index:sitemap",
+      "displayName": "reversegitops.dev sitemap",
+      "description": "The canonical list of crawlable URLs on reversegitops.dev.",
+      "type": "application/xml",
+      "url": "https://reversegitops.dev/sitemap.xml",
+      "representativeQueries": [
+        "all pages on reversegitops.dev",
+        "reversegitops.dev sitemap"
+      ]
+    }
+  ]
+}
