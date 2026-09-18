@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import raw from '../../external/manifesto/README.md?raw';
 import { marked } from 'marked';
 import { Megaphone } from 'lucide-astro';
+import PrincipleDiagram from '../components/PrincipleDiagram.astro';
+import { PANELS, readPanel, drawingOf, svgSize, svgAlt } from '../lib/diagrams';
 
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
 const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
@@ -28,6 +30,39 @@ content = content.replace(
 
 // Style the opening hook paragraph
 content = content.replace(/<p>(GitOps gave us)/, '<p class="lead">$1');
+
+// One panel per principle, each derived wholly from its Excalidraw export:
+// size, alt text and the gradient swap all follow the drawing, so editing and
+// re-exporting is the entire update. See src/lib/diagrams.ts.
+//
+// No captions: each drawing carries its own numbered wording, the prose above
+// it already makes the point, and llms.txt states the principles for text-only
+// readers. A caption would be a fourth telling to keep in step by hand.
+const DIAGRAMS = PANELS.map((panel) => {
+  const svg = readPanel(panel.file);
+  const drawing = drawingOf(svg);
+
+  return {
+    heading: panel.heading,
+    src: `/diagrams/${panel.slug}.svg`,
+    ...svgSize(svg, panel.file),
+    alt: svgAlt(drawing),
+  };
+});
+
+// Mark the end of each principle section — the <hr> that closes it — so the
+// panel lands after the prose rather than splitting the heading from it.
+DIAGRAMS.forEach(({ heading }, i) => {
+  const at = content.indexOf(heading);
+  if (at === -1) throw new Error(`manifesto heading not found: ${heading}`);
+  const hr = content.indexOf('<hr>', at);
+  if (hr === -1) throw new Error(`no <hr> closing the section: ${heading}`);
+  content = `${content.slice(0, hr)}<!--rgo-diagram-${i}-->${content.slice(hr)}`;
+});
+
+// Split into [html, index, html, index, html, ...] so the panels can be real
+// components rather than strings injected through set:html.
+const parts = content.split(/<!--rgo-diagram-(\d)-->/);
 
 const apiRes = await fetch('https://api.github.com/repos/reverse-gitops/manifesto');
 const repoData = apiRes.ok ? await apiRes.json() : {};
@@ -98,7 +133,18 @@ const stars: number = repoData.stargazers_count ?? 0;
     }
   </script>
 
+
   <main id="manifesto">
-    <article class="manifesto" set:html={content} />
+    <article class="manifesto">
+      {
+        parts.map((part, i) =>
+          i % 2 === 0 ? (
+            <Fragment set:html={part} />
+          ) : (
+            <PrincipleDiagram {...DIAGRAMS[Number(part)]} />
+          ),
+        )
+      }
+    </article>
   </main>
 </Layout>

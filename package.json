@@ -5,6 +5,7 @@
   "scripts": {
     "sync:manifesto": "git submodule update --init --remote external/manifesto",
     "render:og": "node scripts/render-og-image.mjs",
+    "diagrams:check": "node scripts/check-diagrams.mjs",
     "prebuild": "npm run sync:manifesto && npm run render:og",
     "predev": "npm run sync:manifesto",
     "dev": "astro dev",
@@ -19,5 +20,9 @@
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "core-js": false
   }
 }

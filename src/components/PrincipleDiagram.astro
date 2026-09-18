@@ -1,0 +1,73 @@
+---
+// One diagram panel, as a sheet of paper inset in the dark page.
+//
+// The drawing is served by /diagrams/[panel].svg, which derives it from the
+// Excalidraw export in public/. Editing and re-exporting the drawing is the
+// whole update; see src/lib/diagrams.ts.
+
+interface Props {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
+const { src, width, height, alt } = Astro.props;
+---
+
+<figure class="dg-figure">
+  <div class="dg-card">
+    <div class="dg-scroll">
+      <img class="dg-img" src={src} width={width} height={height} alt={alt} loading="lazy" decoding="async" />
+    </div>
+  </div>
+</figure>
+
+<style>
+  .dg-figure {
+    margin: 1.75rem 0 2rem;
+  }
+
+  /* The one deliberately light surface on the site. The drawings were made on
+     white and their vendor logos carry light backgrounds that cannot be
+     recoloured, so they get a sheet of paper rather than a recolour.
+
+     --dg-paper is the single knob; everything else follows from it. The
+     served SVGs are transparent (the exporter's background is stripped in
+     src/lib/diagrams.ts), so the paper shows through and the drawn colours
+     render exactly as authored. */
+  .dg-card {
+    --dg-paper: #e8edf3;
+
+    background: var(--dg-paper);
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    box-shadow:
+      /* hairline mat just inside the paper edge */
+      inset 0 0 0 1px rgba(8, 12, 16, 0.09),
+      /* outer keyline, tinted toward the site accent */
+      0 0 0 1px rgba(68, 147, 248, 0.22),
+      0 12px 30px rgba(0, 0, 0, 0.55);
+  }
+
+  .dg-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .dg-img {
+    display: block;
+    width: 100%;
+    /* Below this the hand-drawn labels stop being readable, so the card
+       scrolls sideways instead of shrinking the drawing further. */
+    min-width: 560px;
+    height: auto;
+  }
+
+  /* Only exports that still carry their own opaque background need this. */
+  @media (max-width: 600px) {
+    .dg-card {
+      padding: 0.6rem 0.7rem;
+    }
+  }
+</style>
