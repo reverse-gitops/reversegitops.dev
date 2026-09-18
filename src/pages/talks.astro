@@ -2,7 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import { MapPin, Globe } from 'lucide-astro';
 
-const OREDEV_URL = 'https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9';
+const FRONTMANIA_URL = 'https://frontmania.com/';
+const DCND_URL = 'https://www.dutchcloudnativeday.nl/';
+const OREDEV_URL = 'https://oredev.org/';
+const DDC_URL = 'https://www.developer-world.com/ddc-programm';
 const SWISS_URL = 'https://cloudnativeday.ch/sessions/1223005';
 const SWISS_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/gitops-needs-an-api.pdf';
 const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
@@ -24,6 +27,64 @@ const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/di
         <h2 class="section-label">Upcoming</h2>
         <div class="talk-card">
           <div class="talk-meta">
+            <span class="talk-event">Frontmania 2026</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Jaarbeurs, Utrecht · October 7, 2026 · 11:00–11:45 CEST · Mission 2</span>
+          </div>
+          <h3 class="talk-title">Be BFFs with the Kubernetes API</h3>
+          <p class="talk-desc">
+            Kubernetes is famous for running containers, but its API model is the interesting
+            part: flexible resources, desired state, live updates through watches, validation,
+            and advanced access control. Platform engineers use these ideas every day.
+            Frontenders usually only get the boring REST endpoint at the end. Isn't that a missed
+            opportunity?
+          </p>
+          <p class="talk-desc">
+            The talk runs an open-source coffee-ordering demo where the whole audience gets admin
+            rights and configures it from their phones, showing how live updates are not only
+            cool but genuinely useful for handling conflicts. This is not a talk about exposing
+            production infrastructure to the public internet. It is about running a small,
+            dedicated Kubernetes API server as a product backend — and asking whether Kubernetes
+            could become your Backend for Frontend.
+          </p>
+          <div class="talk-links">
+            <a href={FRONTMANIA_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Frontmania 2026 →</a>
+          </div>
+        </div>
+
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">Dutch Cloud Native Day 2026</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Jaarbeurs, Utrecht · October 30, 2026 · 14:40–15:10 CET · Mission 2</span>
+          </div>
+          <h3 class="talk-title">We GitOps'd Everything Except the Settings That Break Production</h3>
+          <p class="talk-desc">
+            Software teams have a delivery process for code. But what about the runtime
+            configuration around that code? It is often self-service for end users, hidden behind
+            admin screens and custom database tables, and changed outside the delivery process.
+            Feature flags, business rules, and specific domain settings can change production
+            behaviour just as much as new code.
+          </p>
+          <p class="talk-desc">
+            This talk starts with application settings that broke production, and each one leads
+            back to the same uncomfortable questions: who made the change, where was it
+            validated, and how do we stop the next one? Could important product configuration
+            live in a separate Git repo, reviewed and promoted like code, while the people who
+            change it never see Git and just use a nice settings screen? The session covers the
+            design of an open-source tool built to explore this, where it gets hard (conflicts,
+            concurrency, and putting real authors on Git commits), and a live demo with the whole
+            audience as admins.
+          </p>
+          <div class="talk-links">
+            <a href={DCND_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Dutch Cloud Native Day 2026 →</a>
+          </div>
+        </div>
+
+        <div class="talk-card">
+          <div class="talk-meta">
             <span class="talk-event">Øredev 2026</span>
             <span class="talk-sep">·</span>
             <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
@@ -43,7 +104,7 @@ const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/di
             environments as controlled artifacts.
           </p>
           <div class="talk-links">
-            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Session page →</a>
+            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Øredev 2026 →</a>
           </div>
         </div>
 
@@ -66,7 +127,36 @@ const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/di
             which trade-offs it introduces, and where the model starts to break down.
           </p>
           <div class="talk-links">
-            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Session page →</a>
+            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Øredev 2026 →</a>
+          </div>
+        </div>
+
+        <div class="talk-card">
+          <div class="talk-meta">
+            <span class="talk-event">DDC 2026 · .NET Developer Conference</span>
+            <span class="talk-sep">·</span>
+            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
+            <span class="talk-date">Hyatt Regency, Cologne · November 26, 2026 · 09:00–13:00 CET · Half-day workshop</span>
+          </div>
+          <h3 class="talk-title">What If All Configuration Could Have a Kubernetes-Style API?</h3>
+          <p class="talk-desc">
+            The best REST API I have ever seen is Kubernetes — not because it runs containers, but
+            because the API machinery underneath is flexible enough to model many kinds of intent:
+            typed resources, schema validation, optimistic concurrency, watches, status, events,
+            audit, authentication, and resource-level authorization. Pods and deployments are just
+            the famous examples.
+          </p>
+          <p class="talk-desc">
+            Application configuration is the practical case. This hands-on workshop inspects a
+            configurable coffee-ordering app and improves its model together: how to split settings
+            across one or more resource types, how to model one-to-many relationships, how to
+            define authorization, and the harder question of what happens to existing values when
+            the model itself changes. Attendees work in their own devcontainer at two levels —
+            first changing the configuration, then changing the definition itself. You do not need
+            to be a Kubernetes operator, or even plan to use Kubernetes.
+          </p>
+          <div class="talk-links">
+            <a href={DDC_URL} class="talk-link" target="_blank" rel="noopener noreferrer">DDC 2026 programme →</a>
           </div>
         </div>
       </section>
