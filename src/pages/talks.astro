@@ -5,7 +5,6 @@ import { MapPin, Globe } from 'lucide-astro';
 const FRONTMANIA_URL = 'https://frontmania.com/';
 const DCND_URL = 'https://www.dutchcloudnativeday.nl/';
 const OREDEV_URL = 'https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9';
-const DDC_URL = 'https://www.developer-world.com/ddc-programm';
 const SWISS_URL = 'https://cloudnativeday.ch/sessions/1223005';
 const SWISS_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/gitops-needs-an-api.pdf';
 const SWISS_YT_EMBED = 'https://www.youtube.com/embed/uBuf7Q91k9s';
@@ -102,35 +101,6 @@ const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/di
           </p>
           <div class="talk-links">
             <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Øredev 2026 speaker page →</a>
-          </div>
-        </div>
-
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">DDC 2026 · .NET Developer Conference</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Hyatt Regency, Cologne (Köln) · November 26, 2026 · 09:00–13:00 CET · Half-day workshop</span>
-          </div>
-          <h3 class="talk-title">What If All Configuration Could Have a Kubernetes-Style API?</h3>
-          <p class="talk-desc">
-            The best REST API I have ever seen is Kubernetes — not because it runs containers, but
-            because the API machinery underneath is flexible enough to model many kinds of intent:
-            typed resources, schema validation, optimistic concurrency, watches, status, events,
-            audit, authentication, and resource-level authorization. Pods and deployments are just
-            the famous examples.
-          </p>
-          <p class="talk-desc">
-            Application configuration is the practical case. This hands-on workshop inspects a
-            configurable coffee-ordering app and improves its model together: how to split settings
-            across one or more resource types, how to model one-to-many relationships, how to
-            define authorization, and the harder question of what happens to existing values when
-            the model itself changes. Attendees work in their own devcontainer at two levels —
-            first changing the configuration, then changing the definition itself. You do not need
-            to be a Kubernetes operator, or even plan to use Kubernetes.
-          </p>
-          <div class="talk-links">
-            <a href={DDC_URL} class="talk-link" target="_blank" rel="noopener noreferrer">DDC 2026 programme →</a>
           </div>
         </div>
       </section>
