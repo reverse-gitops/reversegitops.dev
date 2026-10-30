@@ -694,6 +694,15 @@ section:first-of-type .section-label { margin-top: 0; }
 
 .talk-index .ti-speaker { color: #c9d1d9; white-space: nowrap; }
 .talk-index .ti-status { padding-right: 0; text-align: right; }
+.talk-index .ti-video { text-align: center; width: 1%; }
+
+.ti-video a {
+  display: inline-flex;
+  color: var(--accent);
+  transition: color 0.15s;
+}
+
+.ti-video a:hover { color: var(--text); }
 
 .ti-title {
   color: var(--text);
