@@ -52,6 +52,17 @@ Two things will stop a build rather than fail quietly:
 
 Adding a fourth panel means adding an entry to `PANELS` and a matching `<hr>`-terminated section in the manifesto.
 
+## Container image
+
+Every push, on any branch, also builds an nginx image of the site through `.github/workflows/image.yml`, and `main` is rebuilt on the same nightly and manifesto-updated triggers as the Pages deploy. It is not used for production yet; GitHub Pages still serves the site.
+
+| Tag | What |
+| --- | --- |
+| `ghcr.io/reverse-gitops/reversegitops.dev:<branch>` | Latest build of that branch; moves |
+| `ghcr.io/reverse-gitops/reversegitops.dev:sha-<short>` | One commit of this repo, re-pushed when a rebuild picks up a newer manifesto |
+
+The container listens on `:8080`. `test/routing.sh` runs against the pushed image and fails the build if a page redirects, a stylesheet is missing or a text file is served with the wrong type. Run it locally with `test/routing.sh` (needs Docker).
+
 ## Attributions
 
 - The GitOps movement as managed by [OpenGitOps](https://github.com/open-gitops) project (CC BY 4.0)
