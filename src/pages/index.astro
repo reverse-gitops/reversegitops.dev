@@ -5,9 +5,9 @@ import { marked } from 'marked';
 import { Megaphone } from 'lucide-astro';
 import PrincipleDiagram from '../components/PrincipleDiagram.astro';
 import { PANELS, readPanel, drawingOf, svgSize, svgAlt } from '../lib/diagrams';
+import { getTalks } from '../lib/talks';
 
-const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
-const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
+const nextTalk = (await getTalks()).upcoming[0];
 
 // external/manifesto is a submodule tracking main; the sync:manifesto script
 // moves it to the branch tip and runs from predev and prebuild. Imported via
@@ -102,36 +102,15 @@ const stars: number = repoData.stargazers_count ?? 0;
     </div>
   </div>
 
-  <a href="/talks" class="kubecon-banner">
-    <Megaphone class="banner-icon" size={16} />
-    <span class="banner-sep">·</span>
-    <span><span id="speaking-verb">I'm speaking</span> at <strong>Øredev 2026</strong></span>
-    <span class="banner-sep">·</span>
-    <span class="banner-cta">View talks →</span>
-  </a>
-
-  <a href="/talks" class="past-banner">
-    <span class="past-banner-label">Also spoke at:</span>
-    <strong>Swiss Cloud Native Day 2026</strong>
-    <span class="banner-sep">·</span>
-    <span>GitOps Needs an API · Bern</span>
-  </a>
-
-  <script>
-    // Talk: Øredev 2026, Nov 5 2026, 14:55–15:35 CET (13:55–14:35 UTC)
-    const talkStart = new Date('2026-11-05T13:55:00Z');
-    const talkEnd   = new Date('2026-11-05T14:35:00Z');
-    const now = new Date();
-    const el = document.getElementById('speaking-verb');
-    if (el) {
-      if (now >= talkStart && now < talkEnd) {
-        el.textContent = "I'm currently speaking";
-      } else if (now >= talkEnd) {
-        el.textContent = "I've spoken";
-      }
-      // before the talk: default "I'm speaking" stays
-    }
-  </script>
+  {nextTalk && (
+    <a href={`/talks/#${nextTalk.id}`} class="kubecon-banner">
+      <Megaphone class="banner-icon" size={16} />
+      <span class="banner-sep">·</span>
+      <span>Next talk: <strong>{nextTalk.event}</strong></span>
+      <span class="banner-sep">·</span>
+      <span class="banner-cta">View talk →</span>
+    </a>
+  )}
 
 
   <main id="manifesto">

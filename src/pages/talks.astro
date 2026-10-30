@@ -1,29 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import { MapPin, Globe, FileText, Image, Link2 } from 'lucide-astro';
+import { getTalks, type LinkKind } from '../lib/talks';
 
-type LinkKind = 'primary' | 'slides' | 'poster' | 'secondary';
-
-const talks = (await getCollection('talks')).map(({ id, data }) => {
-  const links: { href: string; label: string; kind: LinkKind }[] = [];
-  if (data.youtube) links.push({ href: `https://www.youtube.com/watch?v=${data.youtube}`, label: 'Watch on YouTube →', kind: 'primary' });
-  if (data.slides) links.push({ href: data.slides, label: 'Slides', kind: 'slides' });
-  if (data.poster) links.push({ href: data.poster.src, label: 'Poster', kind: 'poster' });
-  const hasMain = links.length > 0;
-  data.links.forEach((l, i) => links.push({ ...l, kind: !hasMain && i === 0 ? 'primary' : 'secondary' }));
-  return { ...data, id, date: data.date.toISOString().slice(0, 10), links };
-});
-type Talk = (typeof talks)[number];
-
-const today = new Date().toISOString().slice(0, 10);
-const isUpcoming = (t: Talk) => t.date > today; // a talk counts as given on its own day
-const upcoming = talks.filter(isUpcoming).sort((a, b) => a.date.localeCompare(b.date));
-const past = talks.filter((t) => !isUpcoming(t)).sort((a, b) => b.date.localeCompare(a.date));
+const { upcoming, past } = await getTalks();
 const ordered = [...upcoming, ...past];
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const speakers = [...new Set(talks.map((t) => t.speaker))];
+const speakers = [...new Set(ordered.map((t) => t.speaker))];
 const fmt = (d: string, month: 'long' | 'short') =>
   new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month, day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 const linkClass = (kind: LinkKind) => (kind === 'primary' ? 'talk-link' : `talk-link ${kind}`);
@@ -63,7 +47,7 @@ const sections = [
         </thead>
         <tbody>
           {ordered.map((t) => (
-            <tr data-status={isUpcoming(t) ? 'upcoming' : 'past'} data-speaker={slug(t.speaker)}>
+            <tr data-status={upcoming.includes(t) ? 'upcoming' : 'past'} data-speaker={slug(t.speaker)}>
               <td class="ti-date">{fmt(t.date, 'short')}</td>
               <td>
                 <a href={`#${t.id}`} class="ti-title">{t.title}</a>
@@ -71,7 +55,7 @@ const sections = [
               </td>
               <td class="ti-speaker">{t.speaker}</td>
               <td class="ti-status">
-                <span class:list={['talk-badge', isUpcoming(t) ? 'upcoming' : 'past']}>{isUpcoming(t) ? 'Upcoming' : 'Past'}</span>
+                <span class:list={['talk-badge', upcoming.includes(t) ? 'upcoming' : 'past']}>{upcoming.includes(t) ? 'Upcoming' : 'Past'}</span>
               </td>
             </tr>
           ))}
