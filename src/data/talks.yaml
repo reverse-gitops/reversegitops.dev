@@ -221,9 +221,19 @@
   title: "GitOps Reinvented: Leveraging Imperative Tools for CAPI Clusters Management"
   abstract:
     - >-
-      A transparent solution to the GitOps reconciling issue. Consider kube-api as the unique
-      interface to interact with your cluster. Maintain a single source of truth for your
-      cluster state.
+      The GitOps approach has become a cornerstone of Kubernetes workflows, offering a
+      declarative way to manage infrastructure and applications. However, managing
+      infrastructure like Kubernetes clusters with GitOps presents challenges. For instance,
+      large and complex CAPI manifests can lead to misconfigurations with unintended
+      consequences.
+    - >-
+      To address this, platform engineers can use tools like kubectl, oc, or web UIs for an
+      imperative, user-friendly experience. These tools validate inputs before sending
+      requests to the Kubernetes API server, reducing errors.
+    - >-
+      But how can we integrate GitOps principles while using these tools? This session
+      explores how ArgoCD & Syngit enable GitOps workflows for CAPI cluster management,
+      combining declarative and imperative approaches for better results.
   poster:
     src: /Damien-Dassieu-GitOps-Reinvented.jpg
     width: 3840
