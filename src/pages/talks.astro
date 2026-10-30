@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { MapPin, Globe, FileText, Image, Link2 } from 'lucide-astro';
+import { MapPin, Globe, FileText, Image, Link2, CirclePlay } from 'lucide-astro';
 import { getTalks, type LinkKind } from '../lib/talks';
 
 const { upcoming, past } = await getTalks();
 const ordered = [...upcoming, ...past];
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const recorded = ordered.filter((t) => t.youtube).length;
 const speakers = [...new Set(ordered.map((t) => t.speaker))];
 const fmt = (d: string, month: 'long' | 'short') =>
   new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month, day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -34,6 +35,9 @@ const sections = [
             <button type="button" class="talk-chip" data-filter="speaker" data-value={slug(s)} aria-pressed="false">{s}</button>
           ))}
         </div>
+        <div class="talk-filter-group" role="group" aria-label="Filter by recording">
+          <button type="button" class="talk-chip" data-filter="recorded" data-value="yes" data-toggle aria-pressed="false">Recorded ({recorded})</button>
+        </div>
       </div>
 
       <table class="talk-index">
@@ -42,24 +46,32 @@ const sections = [
             <th scope="col" class="ti-date">Date</th>
             <th scope="col">Talk</th>
             <th scope="col" class="ti-speaker">Speaker</th>
+            <th scope="col" class="ti-video">Video</th>
             <th scope="col" class="ti-status">Status</th>
           </tr>
         </thead>
         <tbody>
           {ordered.map((t) => (
-            <tr data-status={upcoming.includes(t) ? 'upcoming' : 'past'} data-speaker={slug(t.speaker)}>
+            <tr data-status={upcoming.includes(t) ? 'upcoming' : 'past'} data-speaker={slug(t.speaker)} data-recorded={t.youtube ? 'yes' : 'no'}>
               <td class="ti-date">{fmt(t.date, 'short')}</td>
               <td>
                 <a href={`#${t.id}`} class="ti-title">{t.title}</a>
                 <span class="ti-event">{t.event}<span class="ti-mobile"> · {t.speaker} · {fmt(t.date, 'short')}</span></span>
               </td>
               <td class="ti-speaker">{t.speaker}</td>
+              <td class="ti-video">
+                {t.youtube && (
+                  <a href={`https://www.youtube.com/watch?v=${t.youtube}`} target="_blank" rel="noopener noreferrer" title="Watch the recording on YouTube" aria-label={`Watch ${t.title} on YouTube`}>
+                    <CirclePlay size={18} />
+                  </a>
+                )}
+              </td>
               <td class="ti-status">
                 <span class:list={['talk-badge', upcoming.includes(t) ? 'upcoming' : 'past']}>{upcoming.includes(t) ? 'Upcoming' : 'Past'}</span>
               </td>
             </tr>
           ))}
-          <tr class="ti-empty" hidden><td colspan="4">No talks match these filters.</td></tr>
+          <tr class="ti-empty" hidden><td colspan="5">No talks match these filters.</td></tr>
         </tbody>
       </table>
 
@@ -67,7 +79,7 @@ const sections = [
         <section data-section={status}>
           <h2 class="section-label">{label}</h2>
           {items.map((t) => (
-            <article class="talk-card" id={t.id} data-status={status} data-speaker={slug(t.speaker)}>
+            <article class="talk-card" id={t.id} data-status={status} data-speaker={slug(t.speaker)} data-recorded={t.youtube ? 'yes' : 'no'}>
               <div class="talk-meta">
                 <span class="talk-event">{t.event}</span>
                 <span class="talk-sep">·</span>
@@ -124,12 +136,11 @@ const sections = [
   const sections = [...document.querySelectorAll<HTMLElement>('section[data-section]')];
   const empty = document.querySelector<HTMLElement>('.ti-empty')!;
   const head = document.querySelector<HTMLElement>('.talk-index thead')!;
-  const state = { status: '', speaker: '' };
+  const keys = ['status', 'speaker', 'recorded'] as const;
+  const state: Record<(typeof keys)[number], string> = { status: '', speaker: '', recorded: '' };
 
   function apply() {
-    const match = (el: HTMLElement) =>
-      (!state.status || el.dataset.status === state.status) &&
-      (!state.speaker || el.dataset.speaker === state.speaker);
+    const match = (el: HTMLElement) => keys.every((k) => !state[k] || el.dataset[k] === state[k]);
     rows.forEach((r) => (r.hidden = !match(r)));
     cards.forEach((c) => (c.hidden = !match(c)));
     sections.forEach((s) => (s.hidden = !s.querySelector('.talk-card:not([hidden])')));
@@ -138,15 +149,14 @@ const sections = [
     chips.forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter as keyof typeof state] === c.dataset.value)));
 
     const params = new URLSearchParams();
-    if (state.status) params.set('status', state.status);
-    if (state.speaker) params.set('speaker', state.speaker);
+    keys.forEach((k) => state[k] && params.set(k, state[k]));
     const query = params.toString();
     history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
   }
 
-  // Filters can be shared as ?status=past&speaker=damien-dassieu
+  // Filters can be shared as ?status=past&speaker=damien-dassieu&recorded=yes
   const params = new URLSearchParams(location.search);
-  for (const key of ['status', 'speaker'] as const) {
+  for (const key of keys) {
     const value = params.get(key) ?? '';
     if (chips.some((c) => c.dataset.filter === key && c.dataset.value === value)) state[key] = value;
   }
@@ -154,13 +164,15 @@ const sections = [
   // A direct link to a talk always shows that talk, whatever the filters say.
   const target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
   if (target?.classList.contains('talk-card')) {
-    state.status = '';
-    state.speaker = '';
+    keys.forEach((k) => (state[k] = ''));
   }
 
   chips.forEach((chip) =>
     chip.addEventListener('click', () => {
-      state[chip.dataset.filter as keyof typeof state] = chip.dataset.value ?? '';
+      const key = chip.dataset.filter as keyof typeof state;
+      const value = chip.dataset.value ?? '';
+      // A toggle chip (Recorded) switches its filter off when clicked again.
+      state[key] = chip.hasAttribute('data-toggle') && state[key] === value ? '' : value;
       apply();
     }),
   );
