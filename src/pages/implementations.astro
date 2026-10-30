@@ -1,5 +1,8 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+
+const implementations = (await getCollection('implementations')).map(({ id, data }) => ({ ...data, id }));
 ---
 
 <Layout title="Implementations" description="Known open-source implementations of the Reverse GitOps pattern.">
@@ -7,31 +10,25 @@ import Layout from '../layouts/Layout.astro';
     <div class="page-content">
       <h1 class="page-title">Known Implementations</h1>
       <p class="page-lead">
-        Open-source projects that implement the Reverse GitOps pattern — a Kubernetes API receives
-        user intent, a controller writes it back to Git, a GitOps operator deploys from Git.
+        Open-source projects that implement the Reverse GitOps pattern. A Kubernetes API receives
+        what the user wants, a controller writes it to Git, and a GitOps operator deploys it.
       </p>
 
-      <div class="impl-card">
-        <div class="impl-header">
-          <h2 class="impl-name">gitops-reverser</h2>
-          <span class="impl-by">by ConfigButler</span>
+      {implementations.map((impl) => (
+        <div class="impl-card" id={impl.id}>
+          <div class="impl-header">
+            <h2 class="impl-name">{impl.name}</h2>
+            <span class="impl-by">by {impl.by}</span>
+          </div>
+          {impl.description.map((p) => <p class="impl-desc">{p}</p>)}
+          <div class="impl-links">
+            <a href={impl.repo} class="impl-link" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+            {impl.links.map((l) => (
+              <a href={l.href} class="impl-link secondary" target="_blank" rel="noopener noreferrer">{l.label}</a>
+            ))}
+          </div>
         </div>
-        <p class="impl-desc">
-          A Kubernetes operator that watches the Kubernetes API and turns live changes into
-          versioned, sanitised YAML in Git. It strips runtime fields to produce stable, intent-only
-          manifests, can group changes within a time window into a single commit, and gives you an
-          audit trail in Git for every API-level change.
-        </p>
-        <p class="impl-desc">
-          Supports audit-only, human-in-the-loop, and split-ownership modes, with Secret
-          encryption via SOPS/age and SSH-signed commits. Where the control plane exposes audit
-          webhooks — self-managed clusters such as k3s or Talos — commits are attributed to the
-          real Kubernetes actor rather than a single configured identity.
-        </p>
-        <div class="impl-links">
-          <a href="https://github.com/ConfigButler/gitops-reverser" class="impl-link" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
-        </div>
-      </div>
+      ))}
 
       <div class="impl-submit">
         <p>

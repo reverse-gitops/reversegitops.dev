@@ -1,0 +1,42 @@
+# Implementations shown on /implementations, in this order.
+#
+#   id           anchor for direct links: reversegitops.dev/implementations/#<id>
+#   name, by     card heading and who maintains it
+#   repo         source repository; becomes the "View on GitHub →" button
+#   description  one or more paragraphs
+#   links        extra links (articles, docs), shown as secondary buttons
+
+- id: gitops-reverser
+  name: gitops-reverser
+  by: ConfigButler
+  repo: https://github.com/ConfigButler/gitops-reverser
+  description:
+    - >-
+      A Kubernetes operator that watches the Kubernetes API and writes every change to Git as
+      plain YAML. It strips runtime fields so the manifests stay stable, and it can group
+      changes made within a short time window into one commit. You end up with a Git history
+      of everything that was changed through the API.
+    - >-
+      It has audit-only, human-in-the-loop and split-ownership modes, encrypts Secrets with
+      SOPS/age and can sign commits with SSH keys. On self-managed clusters such as k3s or
+      Talos, where you can configure audit webhooks, each commit gets the name of the
+      Kubernetes user who made the change instead of one shared identity.
+
+- id: syngit
+  name: Syngit
+  by: Damien Dassieu
+  repo: https://github.com/syngit-org/syngit
+  description:
+    - >-
+      A Kubernetes operator that intercepts requests to the Kubernetes API and pushes the
+      resources to a Git repository. People keep using kubectl, oc or a web UI, and the change
+      still ends up in Git, where Argo CD or Flux picks it up.
+    - >-
+      Commits are made with the Git account of the Kubernetes user who made the change. You
+      can configure Syngit to only commit a change, or to commit it and also apply it to the
+      cluster. It has integrations for GitHub, GitLab, Flux, Helm and SOPS.
+  links:
+    - label: "Article: the concept"
+      href: https://medium.com/@dassieu.damien/gitops-dont-interact-with-git-interact-with-your-cluster-instead-b261b4945085
+    - label: "Article: setup with Argo CD"
+      href: https://medium.com/@dassieu.damien/full-gitops-setup-with-argocd-and-syngit-48d714789182

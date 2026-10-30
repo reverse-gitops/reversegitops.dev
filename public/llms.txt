@@ -15,7 +15,7 @@ as a pull request or issue there.
 
 - [Home](https://reversegitops.dev/): The Reverse GitOps manifesto in full — the perceived problem with Git as the only write path, and the three principles (API first, capture intent not implementation, GitOps still applies), plus the explicit non-goals.
 - [Talks](https://reversegitops.dev/talks/): Conference talks on Reverse GitOps, upcoming and past, with slides and recordings where they exist.
-- [Implementations](https://reversegitops.dev/implementations/): Known open-source projects that implement the pattern, such as gitops-reverser.
+- [Implementations](https://reversegitops.dev/implementations/): Known open-source projects that implement the pattern, such as gitops-reverser and Syngit.
 - [FAQ](https://reversegitops.dev/faq/): Answers to the common objections — why not use Git directly, is this trying to replace GitOps, how it relates to application configuration.
 
 ## Key ideas

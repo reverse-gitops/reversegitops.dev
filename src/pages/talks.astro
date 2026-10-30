@@ -1,252 +1,199 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
-import { MapPin, Globe } from 'lucide-astro';
+import { MapPin, Globe, FileText, Image, Link2 } from 'lucide-astro';
 
-const FRONTMANIA_URL = 'https://frontmania.com/';
-const DCND_URL = 'https://www.dutchcloudnativeday.nl/';
-const DCND_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/settings-that-break-production.pdf';
-const OREDEV_URL = 'https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9';
-const SWISS_URL = 'https://cloudnativeday.ch/sessions/1223005';
-const SWISS_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/gitops-needs-an-api.pdf';
-const SWISS_YT_EMBED = 'https://www.youtube.com/embed/uBuf7Q91k9s';
-const SWISS_YT_URL = 'https://www.youtube.com/watch?v=uBuf7Q91k9s';
-const KUBECON_SCHED_URL = 'https://sched.co/2DY82';
-const COZYSUMMIT_URL = 'https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/';
-const COZYSUMMIT_YT_EMBED = 'https://www.youtube.com/embed/dkyjOq-I7Zs';
-const COZYSUMMIT_YT_URL = 'https://www.youtube.com/watch?v=dkyjOq-I7Zs';
-const COZYSUMMIT_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/cozystack/slides.pdf';
-const KUBECON_YT_EMBED = 'https://www.youtube.com/embed/X3sUAsTPbDM';
-const KUBECON_YT_URL = 'https://www.youtube.com/watch?v=X3sUAsTPbDM';
-const KUBECON_SLIDES_URL = 'https://github.com/reverse-gitops/talks/blob/main/dist/the-gitops-paradox.pdf';
+type LinkKind = 'primary' | 'slides' | 'poster' | 'secondary';
+
+const talks = (await getCollection('talks')).map(({ id, data }) => {
+  const links: { href: string; label: string; kind: LinkKind }[] = [];
+  if (data.youtube) links.push({ href: `https://www.youtube.com/watch?v=${data.youtube}`, label: 'Watch on YouTube →', kind: 'primary' });
+  if (data.slides) links.push({ href: data.slides, label: 'Slides', kind: 'slides' });
+  if (data.poster) links.push({ href: data.poster.src, label: 'Poster', kind: 'poster' });
+  const hasMain = links.length > 0;
+  data.links.forEach((l, i) => links.push({ ...l, kind: !hasMain && i === 0 ? 'primary' : 'secondary' }));
+  return { ...data, id, date: data.date.toISOString().slice(0, 10), links };
+});
+type Talk = (typeof talks)[number];
+
+const today = new Date().toISOString().slice(0, 10);
+const isUpcoming = (t: Talk) => t.date > today; // a talk counts as given on its own day
+const upcoming = talks.filter(isUpcoming).sort((a, b) => a.date.localeCompare(b.date));
+const past = talks.filter((t) => !isUpcoming(t)).sort((a, b) => b.date.localeCompare(a.date));
+const ordered = [...upcoming, ...past];
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const speakers = [...new Set(talks.map((t) => t.speaker))];
+const fmt = (d: string, month: 'long' | 'short') =>
+  new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month, day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const linkClass = (kind: LinkKind) => (kind === 'primary' ? 'talk-link' : `talk-link ${kind}`);
+const sections = [
+  { label: 'Upcoming', status: 'upcoming', items: upcoming },
+  { label: 'Past', status: 'past', items: past },
+];
 ---
 
-<Layout title="Talks" description="Public talks on Reverse GitOps — the API-first, Git-recorded platform operating model.">
+<Layout title="Talks" description="Conference talks about Reverse GitOps: slides, recordings and upcoming sessions.">
   <main class="page-main">
     <div class="page-content">
       <h1 class="page-title">Talks</h1>
 
-      <section>
-        <h2 class="section-label">Upcoming</h2>
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">Øredev 2026</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Malmö · November 5, 2026 · 14:55–15:35 CET · STAMP</span>
-          </div>
-          <h3 class="talk-title">Configuration Deserves a Software Delivery Process Too</h3>
-          <p class="talk-desc">
-            Configuration is often some of the most critical logic in a system, yet many teams
-            still manage it with far less discipline than code. It lives in databases, gets edited
-            through admin screens, bypasses proper review, mixes awkwardly with secrets, and moves
-            across environments with limited testing and weak packaging boundaries.
-          </p>
-          <p class="talk-desc">
-            This talk argues that configuration should be treated as a delivery problem, not just a
-            storage problem: capture validated intent through an API, then turn it into
-            configuration that is tested, packaged, versioned, signed, and promoted through
-            environments as controlled artifacts.
-          </p>
-          <div class="talk-links">
-            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Øredev 2026 speaker page →</a>
-          </div>
+      <div class="talk-filters" hidden>
+        <div class="talk-filter-group" role="group" aria-label="Filter by status">
+          <button type="button" class="talk-chip" data-filter="status" data-value="" aria-pressed="true">All</button>
+          <button type="button" class="talk-chip" data-filter="status" data-value="upcoming" aria-pressed="false">Upcoming ({upcoming.length})</button>
+          <button type="button" class="talk-chip" data-filter="status" data-value="past" aria-pressed="false">Past ({past.length})</button>
         </div>
+        <div class="talk-filter-group" role="group" aria-label="Filter by speaker">
+          <button type="button" class="talk-chip" data-filter="speaker" data-value="" aria-pressed="true">All speakers</button>
+          {speakers.map((s) => (
+            <button type="button" class="talk-chip" data-filter="speaker" data-value={slug(s)} aria-pressed="false">{s}</button>
+          ))}
+        </div>
+      </div>
 
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">Øredev 2026</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Malmö · November 6, 2026 · 11:15–11:55 CET · TURING</span>
-          </div>
-          <h3 class="talk-title">(Ab)using the Kubernetes API as a Configuration Backend</h3>
-          <p class="talk-desc">
-            Configuration-heavy products often reinvent the same backend machinery: typed objects,
-            validation, permissions, audit trails, and some form of realtime change propagation.
-            Over time, that configuration backend starts to look a lot like a control plane.
-          </p>
-          <p class="talk-desc">
-            This talk explores the Kubernetes API as a backend for configuration-heavy software
-            products rather than as an infrastructure surface, including what the approach enables,
-            which trade-offs it introduces, and where the model starts to break down.
-          </p>
-          <div class="talk-links">
-            <a href={OREDEV_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Øredev 2026 speaker page →</a>
-          </div>
-        </div>
-      </section>
+      <table class="talk-index">
+        <thead>
+          <tr>
+            <th scope="col" class="ti-date">Date</th>
+            <th scope="col">Talk</th>
+            <th scope="col" class="ti-speaker">Speaker</th>
+            <th scope="col" class="ti-status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ordered.map((t) => (
+            <tr data-status={isUpcoming(t) ? 'upcoming' : 'past'} data-speaker={slug(t.speaker)}>
+              <td class="ti-date">{fmt(t.date, 'short')}</td>
+              <td>
+                <a href={`#${t.id}`} class="ti-title">{t.title}</a>
+                <span class="ti-event">{t.event}<span class="ti-mobile"> · {t.speaker} · {fmt(t.date, 'short')}</span></span>
+              </td>
+              <td class="ti-speaker">{t.speaker}</td>
+              <td class="ti-status">
+                <span class:list={['talk-badge', isUpcoming(t) ? 'upcoming' : 'past']}>{isUpcoming(t) ? 'Upcoming' : 'Past'}</span>
+              </td>
+            </tr>
+          ))}
+          <tr class="ti-empty" hidden><td colspan="4">No talks match these filters.</td></tr>
+        </tbody>
+      </table>
 
-      <section>
-        <h2 class="section-label">Past</h2>
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">Dutch Cloud Native Day 2026</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Jaarbeurs, Utrecht · October 30, 2026</span>
-          </div>
-          <h3 class="talk-title">We GitOps'd Everything Except the Settings That Break Production</h3>
-          <p class="talk-desc">
-            Software teams have a delivery process for code. But what about the runtime
-            configuration around that code? It is often self-service for end users, hidden behind
-            admin screens and custom database tables, and changed outside the delivery process.
-            Feature flags, business rules, and specific domain settings can change production
-            behaviour just as much as new code.
-          </p>
-          <p class="talk-desc">
-            This talk starts with application settings that broke production, and each one leads
-            back to the same uncomfortable questions: who made the change, where was it
-            validated, and how do we stop the next one? Could important product configuration
-            live in a separate Git repo, reviewed and promoted like code, while the people who
-            change it never see Git and just use a nice settings screen? The session covers the
-            design of an open-source tool built to explore this, where it gets hard (conflicts,
-            concurrency, and putting real authors on Git commits), and a live demo with the whole
-            audience as admins.
-          </p>
-          <div class="talk-links">
-            <a href={DCND_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Dutch Cloud Native Day 2026 →</a>
-            <a href={DCND_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
-          </div>
-        </div>
-
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">Frontmania 2026</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Jaarbeurs, Utrecht · October 7, 2026</span>
-          </div>
-          <h3 class="talk-title">Be BFFs with the Kubernetes API</h3>
-          <p class="talk-desc">
-            Kubernetes is famous for running containers, but its API model is the interesting
-            part: flexible resources, desired state, live updates through watches, validation,
-            and advanced access control. Platform engineers use these ideas every day.
-            Frontenders usually only get the boring REST endpoint at the end. Isn't that a missed
-            opportunity?
-          </p>
-          <p class="talk-desc">
-            The talk runs an open-source coffee-ordering demo where the whole audience gets admin
-            rights and configures it from their phones, showing how live updates are not only
-            cool but genuinely useful for handling conflicts. This is not a talk about exposing
-            production infrastructure to the public internet. It is about running a small,
-            dedicated Kubernetes API server as a product backend — and asking whether Kubernetes
-            could become your Backend for Frontend.
-          </p>
-          <div class="talk-links">
-            <a href={FRONTMANIA_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Frontmania 2026 →</a>
-          </div>
-        </div>
-
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">Swiss Cloud Native Day 2026</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Mount Gurten, Bern · September 17, 2026</span>
-          </div>
-          <h3 class="talk-title">GitOps Needs an API</h3>
-          <p class="talk-desc">
-            GitOps works well — well enough that high-level business intent ends up in Git too:
-            customer tenants, feature rollouts, access policies. The hard part is not storing it
-            there. The hard part is expecting business stakeholders or customers to manage that
-            intent through pull requests and raw YAML.
-          </p>
-          <p class="talk-desc">
-            Reverse GitOps is an API-first pattern for exactly this problem: a typed Kubernetes API
-            in front of the repo accepts structured intent through CRDs, without giving callers
-            direct access to Git, and a controller turns that intent into YAML files and commits
-            them. From there the GitOps workflow you already trust stays intact — review, policy
-            checks, CI, and a full audit trail. The talk closed with a live demo of the
-            open-source gitops-reverser operator and an honest checklist of where the pattern fits
-            and where it does not.
-          </p>
-          <div class="talk-video-wrap">
-            <iframe
-              src={SWISS_YT_EMBED}
-              title="GitOps Needs an API — Swiss Cloud Native Day 2026"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div class="talk-links">
-            <a href={SWISS_YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
-            <a href={SWISS_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
-            <a href={SWISS_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Session page</a>
-          </div>
-        </div>
-
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">CozySummit Virtual 2026</span>
-            <span class="talk-sep">·</span>
-            <Globe size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Virtual · May 26, 2026 · 17:50–18:20 UTC</span>
-          </div>
-          <h3 class="talk-title">What If Every Cozystack Change Became a Commit?</h3>
-          <p class="talk-desc">
-            Cozystack exposes platform services as Kubernetes API resources — Postgres, Redis,
-            Bucket, Kubernetes. Users interact in the usual ways: kubectl, the Cozystack
-            dashboard, or AI agents via MCP. But who is making all these changes, and why did
-            they do it? Git seems far away. But it doesn't have to be.
-          </p>
-          <p class="talk-desc">
-            What if every platform change automatically appeared as clean YAML in Git? Fully
-            automated — a silent layer that turns API activity into a durable, readable history
-            of infrastructure intent. Instead of digging through logs or dashboards, teams get
-            versioned history they can inspect, diff, and share. The platform continuously writes
-            its intent back to Git. Git stops being the interface — and starts being the memory.
-          </p>
-          <div class="talk-video-wrap">
-            <iframe
-              src={COZYSUMMIT_YT_EMBED}
-              title="What If Every Cozystack Change Became a Commit? — CozySummit Virtual 2026"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div class="talk-links">
-            <a href={COZYSUMMIT_YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
-            <a href={COZYSUMMIT_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
-            <a href={COZYSUMMIT_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Event page</a>
-          </div>
-        </div>
-
-        <div class="talk-card">
-          <div class="talk-meta">
-            <span class="talk-event">KubeCon + CloudNativeCon Europe 2026 · Platform Engineering Day</span>
-            <span class="talk-sep">·</span>
-            <MapPin size={13} style="flex-shrink:0;opacity:0.7" />
-            <span class="talk-date">Amsterdam · March 23, 2026</span>
-          </div>
-          <h3 class="talk-title">The GitOps Paradox: Why Your Devs Need an API You Don't Want To Build</h3>
-          <p class="talk-desc">
-            This session argues that GitOps is valuable, but Git does not always need to be the
-            human-facing front door for every change. Platform teams often end up rebuilding APIs
-            and UIs around workflows that the Kubernetes API already models well. Reverse GitOps
-            explores a different approach: use a small, typed Kubernetes control plane for user
-            intent, then write that intent back into Git so review, promotion, and auditability
-            stay intact.
-          </p>
-          <p class="talk-desc">
-            The talk includes two live demos: a simple application writing user intent into the
-            Kubernetes API and syncing it back to Git; and a higher-level platform resource
-            flowing from API input to Git to preview and production deployment.
-          </p>
-          <div class="talk-video-wrap">
-            <iframe
-              src={KUBECON_YT_EMBED}
-              title="The GitOps Paradox — KubeCon Platform Engineering Day 2026"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div class="talk-links">
-            <a href={KUBECON_YT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
-            <a href={KUBECON_SLIDES_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Slides</a>
-            <a href={KUBECON_SCHED_URL} class="talk-link secondary" target="_blank" rel="noopener noreferrer">Session page</a>
-          </div>
-        </div>
-      </section>
+      {sections.map(({ label, status, items }) => items.length > 0 && (
+        <section data-section={status}>
+          <h2 class="section-label">{label}</h2>
+          {items.map((t) => (
+            <article class="talk-card" id={t.id} data-status={status} data-speaker={slug(t.speaker)}>
+              <div class="talk-meta">
+                <span class="talk-event">{t.event}</span>
+                <span class="talk-sep">·</span>
+                {t.virtual
+                  ? <Globe size={13} style="flex-shrink:0;opacity:0.7" />
+                  : <MapPin size={13} style="flex-shrink:0;opacity:0.7" />}
+                <span class="talk-date">{[t.place, fmt(t.date, 'long'), status === 'upcoming' && t.schedule].filter(Boolean).join(' · ')}</span>
+              </div>
+              <h3 class="talk-title">{t.title}</h3>
+              <p class="talk-speaker">{t.speaker}</p>
+              {t.abstract.map((p) => <p class="talk-desc">{p}</p>)}
+              {t.youtube && (
+                <div class="talk-video-wrap">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${t.youtube}`}
+                    title={`${t.title} (${t.event})`}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              )}
+              {t.poster && (
+                <a href={t.poster.src} class="talk-poster" target="_blank" rel="noopener noreferrer">
+                  <img src={t.poster.src} alt={t.poster.alt} width={t.poster.width} height={t.poster.height} loading="lazy" decoding="async" />
+                </a>
+              )}
+              <div class="talk-links">
+                {t.links.map((l) => (
+                  <a href={l.href} class={linkClass(l.kind)} target="_blank" rel="noopener noreferrer">
+                    {l.kind === 'slides' && <FileText size={14} />}
+                    {l.kind === 'poster' && <Image size={14} />}
+                    {l.label}
+                  </a>
+                ))}
+                <a href={`#${t.id}`} class="talk-permalink" data-copy-link title="Copy a direct link to this talk">
+                  <Link2 size={13} />
+                  <span>Copy link</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </section>
+      ))}
     </div>
   </main>
 </Layout>
+
+<script>
+  const filters = document.querySelector<HTMLElement>('.talk-filters')!;
+  const chips = [...filters.querySelectorAll<HTMLButtonElement>('.talk-chip')];
+  const rows = [...document.querySelectorAll<HTMLElement>('.talk-index tbody tr[data-status]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.talk-card')];
+  const sections = [...document.querySelectorAll<HTMLElement>('section[data-section]')];
+  const empty = document.querySelector<HTMLElement>('.ti-empty')!;
+  const head = document.querySelector<HTMLElement>('.talk-index thead')!;
+  const state = { status: '', speaker: '' };
+
+  function apply() {
+    const match = (el: HTMLElement) =>
+      (!state.status || el.dataset.status === state.status) &&
+      (!state.speaker || el.dataset.speaker === state.speaker);
+    rows.forEach((r) => (r.hidden = !match(r)));
+    cards.forEach((c) => (c.hidden = !match(c)));
+    sections.forEach((s) => (s.hidden = !s.querySelector('.talk-card:not([hidden])')));
+    empty.hidden = rows.some((r) => !r.hidden);
+    head.hidden = !empty.hidden;
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(state[c.dataset.filter as keyof typeof state] === c.dataset.value)));
+
+    const params = new URLSearchParams();
+    if (state.status) params.set('status', state.status);
+    if (state.speaker) params.set('speaker', state.speaker);
+    const query = params.toString();
+    history.replaceState(null, '', `${location.pathname}${query ? `?${query}` : ''}${location.hash}`);
+  }
+
+  // Filters can be shared as ?status=past&speaker=damien-dassieu
+  const params = new URLSearchParams(location.search);
+  for (const key of ['status', 'speaker'] as const) {
+    const value = params.get(key) ?? '';
+    if (chips.some((c) => c.dataset.filter === key && c.dataset.value === value)) state[key] = value;
+  }
+
+  // A direct link to a talk always shows that talk, whatever the filters say.
+  const target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+  if (target?.classList.contains('talk-card')) {
+    state.status = '';
+    state.speaker = '';
+  }
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      state[chip.dataset.filter as keyof typeof state] = chip.dataset.value ?? '';
+      apply();
+    }),
+  );
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-copy-link]').forEach((link) =>
+    link.addEventListener('click', async () => {
+      const label = link.querySelector('span')!;
+      try {
+        await navigator.clipboard.writeText(`${location.origin}${location.pathname}${link.hash}`);
+        label.textContent = 'Copied';
+        setTimeout(() => (label.textContent = 'Copy link'), 1500);
+      } catch {
+        // Clipboard unavailable: the anchor still navigates, so the address bar has the link.
+      }
+    }),
+  );
+
+  filters.hidden = false;
+  apply();
+</script>
