@@ -1,0 +1,239 @@
+# Talks shown on /talks. Order does not matter: the page sorts by date and puts a
+# talk under Upcoming until the day it is given (decided at build time).
+#
+#   id        anchor for direct links: reversegitops.dev/talks/#<id> (keep it stable)
+#   date      YYYY-MM-DD
+#   schedule  time and room, only shown while the talk is upcoming
+#   virtual   true shows a globe instead of a map pin
+#   youtube   video id; embeds the video and adds "Watch on YouTube →"
+#   slides    URL of the slide deck; adds a "Slides" button
+#   poster    image shown inline plus a "Poster" button
+#   links     extra links; the first one is the main button when there is no
+#             video, slides or poster
+
+- id: we-gitopsd-everything
+  speaker: Simon Koudijs
+  event: Dutch Cloud Native Day 2026
+  date: 2026-10-30
+  place: Jaarbeurs, Utrecht
+  schedule: "14:40–15:10 CET · Mission 2"
+  title: We GitOps'd Everything Except the Settings That Break Production
+  abstract:
+    - >-
+      Software teams have a delivery process for code. But what about the runtime
+      configuration around that code? It is often self-service for end users, hidden behind
+      admin screens and custom database tables, and changed outside the delivery process.
+      Feature flags, business rules, and specific domain settings can change production
+      behaviour just as much as new code.
+    - >-
+      This talk starts with application settings that broke production, and each one leads
+      back to the same uncomfortable questions: who made the change, where was it
+      validated, and how do we stop the next one? Could important product configuration
+      live in a separate Git repo, reviewed and promoted like code, while the people who
+      change it never see Git and just use a nice settings screen? The session covers the
+      design of an open-source tool built to explore this, where it gets hard (conflicts,
+      concurrency, and putting real authors on Git commits), and a live demo with the whole
+      audience as admins.
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/settings-that-break-production.pdf
+  links:
+    - label: Dutch Cloud Native Day 2026 →
+      href: https://www.dutchcloudnativeday.nl/
+
+- id: configuration-deserves-a-delivery-process
+  speaker: Simon Koudijs
+  event: Øredev 2026
+  date: 2026-11-05
+  place: Malmö
+  schedule: "14:55–15:35 CET · STAMP"
+  title: Configuration Deserves a Software Delivery Process Too
+  abstract:
+    - >-
+      Configuration is often some of the most critical logic in a system, yet many teams
+      still manage it with far less discipline than code. It lives in databases, gets edited
+      through admin screens, bypasses proper review, mixes awkwardly with secrets, and moves
+      across environments with limited testing and weak packaging boundaries.
+    - >-
+      This talk argues that configuration should be treated as a delivery problem, not just a
+      storage problem: capture validated intent through an API, then turn it into
+      configuration that is tested, packaged, versioned, signed, and promoted through
+      environments as controlled artifacts.
+  links:
+    - label: Øredev 2026 speaker page →
+      href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
+
+- id: abusing-the-kubernetes-api
+  speaker: Simon Koudijs
+  event: Øredev 2026
+  date: 2026-11-06
+  place: Malmö
+  schedule: "11:15–11:55 CET · TURING"
+  title: (Ab)using the Kubernetes API as a Configuration Backend
+  abstract:
+    - >-
+      Configuration-heavy products often reinvent the same backend machinery: typed objects,
+      validation, permissions, audit trails, and some form of realtime change propagation.
+      Over time, that configuration backend starts to look a lot like a control plane.
+    - >-
+      This talk explores the Kubernetes API as a backend for configuration-heavy software
+      products rather than as an infrastructure surface, including what the approach enables,
+      which trade-offs it introduces, and where the model starts to break down.
+  links:
+    - label: Øredev 2026 speaker page →
+      href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
+
+- id: be-bffs-with-the-kubernetes-api
+  speaker: Simon Koudijs
+  event: Frontmania 2026
+  date: 2026-10-07
+  place: Jaarbeurs, Utrecht
+  title: Be BFFs with the Kubernetes API
+  abstract:
+    - >-
+      Kubernetes is famous for running containers, but its API model is the interesting
+      part: flexible resources, desired state, live updates through watches, validation,
+      and advanced access control. Platform engineers use these ideas every day.
+      Frontenders usually only get the boring REST endpoint at the end. Isn't that a missed
+      opportunity?
+    - >-
+      The talk runs an open-source coffee-ordering demo where the whole audience gets admin
+      rights and configures it from their phones, showing how live updates are not only
+      cool but genuinely useful for handling conflicts. This is not a talk about exposing
+      production infrastructure to the public internet. It is about running a small,
+      dedicated Kubernetes API server as a product backend — and asking whether Kubernetes
+      could become your Backend for Frontend.
+  links:
+    - label: Frontmania 2026 →
+      href: https://frontmania.com/
+
+- id: gitops-needs-an-api
+  speaker: Simon Koudijs
+  event: Swiss Cloud Native Day 2026
+  date: 2026-09-17
+  place: Mount Gurten, Bern
+  title: GitOps Needs an API
+  abstract:
+    - >-
+      GitOps works well — well enough that high-level business intent ends up in Git too:
+      customer tenants, feature rollouts, access policies. The hard part is not storing it
+      there. The hard part is expecting business stakeholders or customers to manage that
+      intent through pull requests and raw YAML.
+    - >-
+      Reverse GitOps is an API-first pattern for exactly this problem: a typed Kubernetes API
+      in front of the repo accepts structured intent through CRDs, without giving callers
+      direct access to Git, and a controller turns that intent into YAML files and commits
+      them. From there the GitOps workflow you already trust stays intact — review, policy
+      checks, CI, and a full audit trail. The talk closed with a live demo of the
+      open-source gitops-reverser operator and an honest checklist of where the pattern fits
+      and where it does not.
+  youtube: uBuf7Q91k9s
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/gitops-needs-an-api.pdf
+  links:
+    - label: Session page
+      href: https://cloudnativeday.ch/sessions/1223005
+
+- id: every-cozystack-change-a-commit
+  speaker: Simon Koudijs
+  event: CozySummit Virtual 2026
+  date: 2026-05-26
+  place: Virtual
+  virtual: true
+  title: What If Every Cozystack Change Became a Commit?
+  abstract:
+    - >-
+      Cozystack exposes platform services as Kubernetes API resources — Postgres, Redis,
+      Bucket, Kubernetes. Users interact in the usual ways: kubectl, the Cozystack
+      dashboard, or AI agents via MCP. But who is making all these changes, and why did
+      they do it? Git seems far away. But it doesn't have to be.
+    - >-
+      What if every platform change automatically appeared as clean YAML in Git? Fully
+      automated — a silent layer that turns API activity into a durable, readable history
+      of infrastructure intent. Instead of digging through logs or dashboards, teams get
+      versioned history they can inspect, diff, and share. The platform continuously writes
+      its intent back to Git. Git stops being the interface — and starts being the memory.
+  youtube: dkyjOq-I7Zs
+  slides: https://github.com/reverse-gitops/talks/blob/main/cozystack/slides.pdf
+  links:
+    - label: Event page
+      href: https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/
+
+- id: the-gitops-paradox
+  speaker: Simon Koudijs
+  event: KubeCon + CloudNativeCon Europe 2026 · Platform Engineering Day
+  date: 2026-03-23
+  place: Amsterdam
+  title: "The GitOps Paradox: Why Your Devs Need an API You Don't Want To Build"
+  abstract:
+    - >-
+      This session argues that GitOps is valuable, but Git does not always need to be the
+      human-facing front door for every change. Platform teams often end up rebuilding APIs
+      and UIs around workflows that the Kubernetes API already models well. Reverse GitOps
+      explores a different approach: use a small, typed Kubernetes control plane for user
+      intent, then write that intent back into Git so review, promotion, and auditability
+      stay intact.
+    - >-
+      The talk includes two live demos: a simple application writing user intent into the
+      Kubernetes API and syncing it back to Git; and a higher-level platform resource
+      flowing from API input to Git to preview and production deployment.
+  youtube: X3sUAsTPbDM
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/the-gitops-paradox.pdf
+  links:
+    - label: Session page
+      href: https://sched.co/2DY82
+
+- id: gitops-reinvented-kubernetes-drift
+  speaker: Damien Dassieu
+  event: Dutch Cloud Native Day 2025
+  date: 2025-07-03
+  place: Jaarbeurs, Utrecht
+  title: "GitOps Reinvented: Correcting Kubernetes Drift Before It Happens"
+  abstract:
+    - >-
+      GitOps has become a foundational practice in Kubernetes environments, offering a
+      declarative, version-controlled approach to infrastructure and application management.
+      Yet, real-world cluster interactions often rely on imperative tools like kubectl, oc,
+      or web UIs that provide faster feedback loops and a more intuitive user experience.
+    - >-
+      These imperative tools validate and send requests directly to the Kubernetes API
+      server, but their actions typically bypass Git, creating gaps in visibility,
+      reproducibility, and auditability.
+    - >-
+      So how can we bridge this gap? This talk introduces a new way to align imperative
+      workflows with GitOps by intercepting kube-api requests and transforming them into Git
+      commits. We’ll explore how Syngit integrates seamlessly with GitOps tools such as
+      ArgoCD or FluxCD to preserve Git as the source of truth even when users interact with
+      clusters imperatively.
+    - >-
+      We'll walk through practical use cases where this approach unlocks better visibility,
+      stronger auditing, and safer infrastructure workflows without forcing users to abandon
+      the tools they already know and love.
+  slides: /Damien-Dassieu-KCD-Utrecht.pdf
+  links:
+    - label: Syngit on GitHub
+      href: https://github.com/syngit-org/syngit
+    - label: DCND 2025 schedule
+      href: https://www.dutchcloudnativeday.nl/2025/schedule/
+
+- id: gitops-reinvented-capi-poster
+  speaker: Damien Dassieu
+  event: KubeCon + CloudNativeCon Europe 2025 · Poster Session
+  date: 2025-04-03
+  place: London
+  title: "GitOps Reinvented: Leveraging Imperative Tools for CAPI Clusters Management"
+  abstract:
+    - >-
+      A transparent solution to the GitOps reconciling issue. Consider kube-api as the unique
+      interface to interact with your cluster. Maintain a single source of truth for your
+      cluster state.
+  poster:
+    src: /Damien-Dassieu-GitOps-Reinvented.jpg
+    width: 3840
+    height: 2160
+    alt: >-
+      Poster for GitOps Reinvented. A user creates a Crossplane CustomCluster with any client
+      tool, Syngit intercepts the request and commits the YAML to Git, and Argo CD or Flux
+      turns it into a CAPI workload cluster.
+  links:
+    - label: Syngit on GitHub
+      href: https://github.com/syngit-org/syngit
+    - label: Session page
+      href: https://kccnceu2025.sched.com/event/1txDi
