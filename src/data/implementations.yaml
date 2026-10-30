@@ -1,12 +1,23 @@
 # Implementations shown on /implementations, in this order.
 #
-#   id           anchor for direct links: reversegitops.dev/implementations/#<id>
+# Each implementation is a Kubernetes-style object (kind: Implementation), the same
+# shape that tools writing Kubernetes resources to Git, such as gitops-reverser, produce.
+#
+#   metadata.name  anchor for direct links: reversegitops.dev/implementations/#<name>
+#
+# Fields under spec:
+#
 #   name, by     card heading and who maintains it
 #   repo         source repository; becomes the "View on GitHub →" button
 #   description  one or more paragraphs
 #   links        extra links (articles, docs), shown as secondary buttons
 
-- id: gitops-reverser
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Implementation
+metadata:
+  name: gitops-reverser
+spec:
   name: gitops-reverser
   by: ConfigButler
   repo: https://github.com/ConfigButler/gitops-reverser
@@ -21,8 +32,12 @@
       SOPS/age and can sign commits with SSH keys. On self-managed clusters such as k3s or
       Talos, where you can configure audit webhooks, each commit gets the name of the
       Kubernetes user who made the change instead of one shared identity.
-
-- id: syngit
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Implementation
+metadata:
+  name: syngit
+spec:
   name: Syngit
   by: Damien Dassieu
   repo: https://github.com/syngit-org/syngit

@@ -1,7 +1,13 @@
 # Talks shown on /talks. Order does not matter: the page sorts by date and puts a
 # talk under Upcoming until the day it is given (decided at build time).
 #
-#   id        anchor for direct links: reversegitops.dev/talks/#<id> (keep it stable)
+# Each talk is a Kubernetes-style object (kind: Talk), the same shape that tools
+# writing Kubernetes resources to Git, such as gitops-reverser, produce.
+#
+#   metadata.name  anchor for direct links: reversegitops.dev/talks/#<name> (keep it stable)
+#
+# Fields under spec:
+#
 #   date      YYYY-MM-DD
 #   schedule  time and room, only shown while the talk is upcoming
 #   virtual   true shows a globe instead of a map pin
@@ -11,7 +17,12 @@
 #   links     extra links; the first one is the main button when there is no
 #             video, slides or poster
 
-- id: we-gitopsd-everything
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: we-gitopsd-everything
+spec:
   speaker: Simon Koudijs
   event: Dutch Cloud Native Day 2026
   date: 2026-10-30
@@ -38,8 +49,12 @@
   links:
     - label: Dutch Cloud Native Day 2026 →
       href: https://www.dutchcloudnativeday.nl/
-
-- id: configuration-deserves-a-delivery-process
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: configuration-deserves-a-delivery-process
+spec:
   speaker: Simon Koudijs
   event: Øredev 2026
   date: 2026-11-05
@@ -60,8 +75,12 @@
   links:
     - label: Øredev 2026 speaker page →
       href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
-
-- id: abusing-the-kubernetes-api
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: abusing-the-kubernetes-api
+spec:
   speaker: Simon Koudijs
   event: Øredev 2026
   date: 2026-11-06
@@ -80,8 +99,12 @@
   links:
     - label: Øredev 2026 speaker page →
       href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
-
-- id: be-bffs-with-the-kubernetes-api
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: be-bffs-with-the-kubernetes-api
+spec:
   speaker: Simon Koudijs
   event: Frontmania 2026
   date: 2026-10-07
@@ -104,8 +127,12 @@
   links:
     - label: Frontmania 2026 →
       href: https://frontmania.com/
-
-- id: gitops-needs-an-api
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: gitops-needs-an-api
+spec:
   speaker: Simon Koudijs
   event: Swiss Cloud Native Day 2026
   date: 2026-09-17
@@ -130,8 +157,12 @@
   links:
     - label: Session page
       href: https://cloudnativeday.ch/sessions/1223005
-
-- id: every-cozystack-change-a-commit
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: every-cozystack-change-a-commit
+spec:
   speaker: Simon Koudijs
   event: CozySummit Virtual 2026
   date: 2026-05-26
@@ -155,8 +186,12 @@
   links:
     - label: Event page
       href: https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/
-
-- id: the-gitops-paradox
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: the-gitops-paradox
+spec:
   speaker: Simon Koudijs
   event: KubeCon + CloudNativeCon Europe 2026 · Platform Engineering Day
   date: 2026-03-23
@@ -179,8 +214,12 @@
   links:
     - label: Session page
       href: https://sched.co/2DY82
-
-- id: gitops-reinvented-kubernetes-drift
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: gitops-reinvented-kubernetes-drift
+spec:
   speaker: Damien Dassieu
   event: Dutch Cloud Native Day 2025
   date: 2025-07-03
@@ -212,8 +251,12 @@
       href: https://github.com/syngit-org/syngit
     - label: DCND 2025 schedule
       href: https://www.dutchcloudnativeday.nl/2025/schedule/
-
-- id: gitops-reinvented-capi-poster
+---
+apiVersion: reversegitops.dev/v1alpha1
+kind: Talk
+metadata:
+  name: gitops-reinvented-capi-poster
+spec:
   speaker: Damien Dassieu
   event: KubeCon + CloudNativeCon Europe 2025 · Poster Session
   date: 2025-04-03
