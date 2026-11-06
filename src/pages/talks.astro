@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { MapPin, Globe, FileText, Image, Link2, CirclePlay } from 'lucide-astro';
 import { getTalks, type LinkKind } from '../lib/talks';
 
+const CONTACT_URL = 'https://calendar.app.google/c2jMcQgREVgbKEj18';
 const { upcoming, past } = await getTalks();
 const ordered = [...upcoming, ...past];
 
@@ -75,9 +76,17 @@ const sections = [
         </tbody>
       </table>
 
-      {sections.map(({ label, status, items }) => items.length > 0 && (
+      {sections.map(({ label, status, items }) => (items.length > 0 || status === 'upcoming') && (
         <section data-section={status}>
           <h2 class="section-label">{label}</h2>
+          {status === 'upcoming' && items.length === 0 && (
+            <article class="talk-card" data-status="upcoming" data-speaker={slug('Simon Koudijs')} data-recorded="no">
+              <h3 class="talk-title">Your conference?</h3>
+              <div class="talk-links">
+                <a href={CONTACT_URL} class="talk-link" target="_blank" rel="noopener noreferrer">Contact Simon →</a>
+              </div>
+            </article>
+          )}
           {items.map((t) => (
             <article class="talk-card" id={t.id} data-status={status} data-speaker={slug(t.speaker)} data-recorded={t.youtube ? 'yes' : 'no'}>
               <div class="talk-meta">
