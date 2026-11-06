@@ -34,7 +34,7 @@
       design of an open-source tool built to explore this, where it gets hard (conflicts,
       concurrency, and putting real authors on Git commits), and a live demo with the whole
       audience as admins.
-  slides: https://github.com/reverse-gitops/talks/blob/main/dist/settings-that-break-production.pdf
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20261030-settings-that-break-production.pdf
   links:
     - label: Dutch Cloud Native Day 2026 →
       href: https://www.dutchcloudnativeday.nl/
@@ -57,6 +57,7 @@
       storage problem: capture validated intent through an API, then turn it into
       configuration that is tested, packaged, versioned, signed, and promoted through
       environments as controlled artifacts.
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20261105-config-deserves-better.pdf
   links:
     - label: Øredev 2026 speaker page →
       href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
@@ -77,6 +78,7 @@
       This talk explores the Kubernetes API as a backend for configuration-heavy software
       products rather than as an infrastructure surface, including what the approach enables,
       which trade-offs it introduces, and where the model starts to break down.
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20261106-abusing-kubernetes-api.pdf
   links:
     - label: Øredev 2026 speaker page →
       href: https://oredev.org/program/da064424-8d62-40e7-bdf9-c0f082f422e9
@@ -101,6 +103,7 @@
       production infrastructure to the public internet. It is about running a small,
       dedicated Kubernetes API server as a product backend — and asking whether Kubernetes
       could become your Backend for Frontend.
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20261007-be-bffs-with-the-kubernetes-api.pdf
   links:
     - label: Frontmania 2026 →
       href: https://frontmania.com/
@@ -126,7 +129,7 @@
       open-source gitops-reverser operator and an honest checklist of where the pattern fits
       and where it does not.
   youtube: uBuf7Q91k9s
-  slides: https://github.com/reverse-gitops/talks/blob/main/dist/gitops-needs-an-api.pdf
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20260917-gitops-needs-an-api.pdf
   links:
     - label: Session page
       href: https://cloudnativeday.ch/sessions/1223005
@@ -151,7 +154,7 @@
       versioned history they can inspect, diff, and share. The platform continuously writes
       its intent back to Git. Git stops being the interface — and starts being the memory.
   youtube: dkyjOq-I7Zs
-  slides: https://github.com/reverse-gitops/talks/blob/main/cozystack/slides.pdf
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20260526-what-if-every-cozystack-change-became-a-commit.pdf
   links:
     - label: Event page
       href: https://community.cncf.io/events/details/cncf-virtual-project-events-hosted-by-cncf-presents-cozysummit-virtual-2026/
@@ -175,7 +178,7 @@
       Kubernetes API and syncing it back to Git; and a higher-level platform resource
       flowing from API input to Git to preview and production deployment.
   youtube: X3sUAsTPbDM
-  slides: https://github.com/reverse-gitops/talks/blob/main/dist/the-gitops-paradox.pdf
+  slides: https://github.com/reverse-gitops/talks/blob/main/dist/20260323-the-gitops-paradox.pdf
   links:
     - label: Session page
       href: https://sched.co/2DY82
